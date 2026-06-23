@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Proveesur — Pinturería de barrio con más de 30 años de trayectoria. Pinturas, accesorios y asesoramiento experto cerca de vos." />
+  <title>Proveesur · Pinturería de barrio con alma</title>
+
+  <!-- ---------- Open Graph / Facebook ---------- -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://proveesur.com" />
+  <meta property="og:title" content="Proveesur · Pinturería de barrio con alma" />
+  <meta property="og:description" content="Más de 30 años dándole color a tus proyectos. Pinturas, accesorios y asesoramiento experto cerca de vos." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1200&auto=format&fit=crop&q=80" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="es_AR" />
+
+  <!-- ---------- Twitter Cards ---------- -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Proveesur · Pinturería de barrio con alma" />
+  <meta name="twitter:description" content="Más de 30 años dándole color a tus proyectos. Pinturas, accesorios y asesoramiento experto cerca de vos." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1200&auto=format&fit=crop&q=80" />
+
+  <!-- ---------- JSON-LD LocalBusiness ---------- -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Proveesur",
+    "description": "Pinturería de barrio con más de 30 años de trayectoria. Pinturas, accesorios y asesoramiento experto.",
+    "url": "https://proveesur.com",
+    "telephone": "+54-11-0000-0000",
+    "email": "hola@proveesur.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Av. Siempre Viva 1234",
+      "addressLocality": "Barrio Sur",
+      "addressCountry": "AR"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+        "opens": "08:00",
+        "closes": "19:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
+        "opens": "08:30",
+        "closes": "13:30"
+      }
+    ],
+    "priceRange": "$$",
+    "image": "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1200&auto=format&fit=crop&q=80",
+    "sameAs": [
+      "#",
+      "#"
+    ]
+  }
+  </script>
+
+  <!-- ---------- Preload hero image ---------- -->
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=900&auto=format&fit=crop&q=80" fetchpriority="high" />
+
+  <!-- Tailwind CSS v4 -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="overflow-x-hidden">
+
+  <!-- =========================================== -->
+  <!-- NAVBAR                                      -->
+  <!-- =========================================== -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background: rgba(251, 247, 241, 0.85); backdrop-filter: saturate(180%) blur(12px);">
+    <nav class="max-w-7xl mx-auto px-5 sm:px-8 py-4 flex items-center justify-between">
+      <a href="#inicio" class="logo-text" aria-label="Proveesur — Inicio">
+        <span class="l1">P</span><span class="l2">r</span><span class="l3">o</span><span class="l4">v</span><span class="rest">eesur</span>
+      </a>
+
+      <!-- Nav desktop -->
+      <ul class="hidden lg:flex items-center gap-8 text-sm font-medium text-[color:var(--ink-soft)]">
+        <li><a href="#inicio" class="nav-link">Inicio</a></li>
+        <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
+        <li><a href="#servicios" class="nav-link">Productos</a></li>
+        <li><a href="#calculadora" class="nav-link">Calculadora</a></li>
+        <li><a href="#contacto" class="nav-link">Contacto</a></li>
+      </ul>
+
+      <a href="#contacto" class="hidden lg:inline-flex btn-primary px-5 py-2.5 rounded-full text-sm font-semibold items-center gap-2">
+        <i data-lucide="palette" class="w-4 h-4"></i>
+        Pedí asesoramiento
+      </a>
+
+      <!-- Botón menú móvil -->
+      <button id="menu-toggle" class="lg:hidden p-2 rounded-lg hover:bg-[color:var(--cream-deep)]" aria-label="Abrir menú">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </nav>
+
+    <!-- Menú móvil -->
+    <div id="mobile-menu" class="mobile-menu lg:hidden absolute top-full left-0 right-0 bg-white border-t border-[color:var(--cream-deep)] shadow-xl">
+      <ul class="flex flex-col px-6 py-4 gap-1 text-[color:var(--ink-soft)]">
+        <li><a href="#inicio" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Inicio</a></li>
+        <li><a href="#nosotros" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Nosotros</a></li>
+        <li><a href="#servicios" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Productos</a></li>
+        <li><a href="#calculadora" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Calculadora</a></li>
+        <li><a href="#contacto" class="block py-3 font-medium">Contacto</a></li>
+        <li class="pt-2">
+          <a href="#contacto" class="btn-primary inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold w-full justify-center">
+            <i data-lucide="palette" class="w-4 h-4"></i> Pedí asesoramiento
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- =========================================== -->
+  <!-- HERO                                        -->
+  <!-- =========================================== -->
+  <section id="inicio" class="hero-bg relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden">
+    <!-- Gotas decorativas -->
+    <div class="paint-drop" style="width: 80px; height: 100px; background: var(--red); top: 15%; left: 5%;"></div>
+    <div class="paint-drop" style="width: 50px; height: 65px; background: var(--yellow); top: 70%; left: 8%;"></div>
+    <div class="paint-drop" style="width: 60px; height: 75px; background: var(--blue); top: 25%; right: 8%;"></div>
+    <div class="paint-drop" style="width: 40px; height: 50px; background: var(--green); bottom: 15%; right: 12%;"></div>
+
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative">
+      <!-- Texto -->
+      <div class="reveal">
+        <div class="years-chip mb-6">
+          <span class="four-colors">
+            <span style="background: var(--red);"></span>
+            <span style="background: var(--blue);"></span>
+            <span style="background: var(--yellow);"></span>
+            <span style="background: var(--green);"></span>
+          </span>
+          <span>Más de 30 años en el barrio</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight mb-5">
+          Más de 30 años dándole
+          <span class="font-script text-5xl sm:text-6xl lg:text-7xl" style="color: var(--red);"> color </span>
+          a tus proyectos
+          <span class="block font-script text-4xl sm:text-5xl lg:text-6xl mt-2" style="color: var(--blue);">
+            y acompañándote como siempre.
+          </span>
+        </h1>
+
+        <p class="text-lg text-[color:var(--ink-soft)] max-w-xl mb-8 leading-relaxed">
+          Somos <strong>Proveesur</strong>, la pinturería del barrio. Te atendemos como a un amigo,
+          te asesoramos con honestidad y te damos todo lo que necesitás para que tu obra salga
+          tal cual la soñaste.
+        </p>
+
+        <div class="flex flex-wrap gap-3">
+          <a href="#calculadora" class="btn-primary inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold">
+            <i data-lucide="calculator" class="w-5 h-5"></i>
+            Calculá tu pintura
+          </a>
+          <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20asesoramiento%20sobre%20pinturas" target="_blank" rel="noopener" class="btn-whatsapp inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold whatsapp-link" aria-label="Contactar por WhatsApp">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+            Hablá con un amigo experto
+          </a>
+        </div>
+
+        <!-- Stats mini -->
+        <div class="grid grid-cols-3 gap-3 mt-10 max-w-md">
+          <div class="stat-block">
+            <div class="text-2xl font-extrabold" style="color: var(--red);"><span class="stat-number" data-target="30" data-suffix="+">0</span></div>
+            <div class="text-xs text-[color:var(--ink-soft)] font-medium">Años</div>
+          </div>
+          <div class="stat-block">
+            <div class="text-2xl font-extrabold" style="color: var(--blue);"><span class="stat-number" data-target="5000" data-suffix="+">0</span></div>
+            <div class="text-xs text-[color:var(--ink-soft)] font-medium">Vecinos</div>
+          </div>
+          <div class="stat-block">
+            <div class="text-2xl font-extrabold" style="color: var(--green);"><span class="stat-number" data-target="200" data-suffix="+">0</span></div>
+            <div class="text-xs text-[color:var(--ink-soft)] font-medium">Colores</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Imagen -->
+      <div class="reveal relative">
+        <div class="hero-image-wrap">
+          <img
+            src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=900&auto=format&fit=crop&q=80"
+            alt="Pintor profesional aplicando pintura en una pared interior con rodillo, iluminación natural"
+            class="w-full h-[420px] md:h-[520px] object-cover"
+            width="900"
+            height="520"
+            fetchpriority="high"
+            decoding="async"
+            onerror="this.src='https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=900&auto=format&fit=crop&q=80'"
+          />
+        </div>
+
+        <!-- Tarjeta flotante -->
+        <div class="absolute -bottom-6 -left-4 md:-left-8 bg-white rounded-2xl shadow-xl p-4 max-w-[220px] border border-[color:var(--cream-deep)]">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--sun-soft);">
+              <i data-lucide="star" class="w-5 h-5" style="color: #B88A00;"></i>
+            </div>
+            <div>
+              <div class="font-bold text-sm">Atención cercana</div>
+              <div class="text-xs text-[color:var(--ink-soft)]">Como a un amigo</div>
+            </div>
+          </div>
+          <div class="text-xs text-[color:var(--ink-soft)] leading-relaxed">
+            "Te asesoramos hasta que encuentres el color perfecto para tu hogar."
+          </div>
+        </div>
+
+        <!-- Indicador scroll -->
+        <div class="hidden md:flex absolute -bottom-2 right-8 scroll-indicator flex-col items-center gap-1 text-[color:var(--ink-soft)]">
+          <span class="text-xs font-medium">Desliza</span>
+          <i data-lucide="chevron-down" class="w-5 h-5"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
+  <!-- QUIÉNES SOMOS                               -->
+  <!-- =========================================== -->
+  <section id="nosotros" class="py-20 md:py-28 relative">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+        <div class="reveal relative">
+          <div class="relative rounded-3xl overflow-hidden shadow-xl">
+            <img
+              src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&auto=format&fit=crop&q=80"
+              alt="Equipo de Proveesur atendiendo y asesorando a un cliente en el local comercial"
+              class="w-full h-[400px] md:h-[500px] object-cover"
+              width="800"
+              height="500"
+              loading="lazy"
+              decoding="async"
+              onerror="this.src='https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&auto=format&fit=crop&q=80'"
+            />
+          </div>
+          <div class="absolute -top-6 -right-6 w-32 h-32 rounded-full hidden md:block" style="background: var(--sun-soft); z-index: -1;"></div>
+          <div class="absolute -bottom-6 -left-6 w-24 h-24 rounded-full hidden md:block" style="background: var(--mint-soft); z-index: -1;"></div>
+        </div>
+
+        <div class="reveal">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-[3px] rounded-full" style="background: var(--red);"></div>
+            <span class="text-sm font-bold uppercase tracking-wider" style="color: var(--red);">Quiénes somos</span>
+          </div>
+
+          <h2 class="text-3xl md:text-5xl font-extrabold leading-tight mb-6">
+            Una pinturería con
+            <span class="font-script" style="color: var(--green);">historia</span>,
+            atendida por
+            <span class="font-script" style="color: var(--blue);">amigos</span>.
+          </h2>
+
+          <p class="text-lg text-[color:var(--ink-soft)] mb-4 leading-relaxed">
+            <strong>Proveesur</strong> abrió sus puertas hace más de tres décadas en el corazón del barrio.
+            Lo que empezó como un pequeño local familiar, hoy es un punto de encuentro donde los vecinos
+            vienen no solo a comprar pintura, sino a pedir consejo, charlar y llevarse soluciones.
+          </p>
+
+          <p class="text-lg text-[color:var(--ink-soft)] mb-8 leading-relaxed">
+            Conocemos a cada cliente por su nombre, entendemos cada proyecto como propio y
+            trabajamos para que vuelvas siempre con una sonrisa (y con el color justo).
+          </p>
+
+          <!-- Valores -->
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="flex items-start gap-3">
+              <div class="icon-bubble" data-color="red" style="min-width: 48px; width: 48px; height: 48px;">
+                <i data-lucide="heart" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-bold mb-1">Cercanía</div>
+                <div class="text-sm text-[color:var(--ink-soft)]">Te tratamos como a un vecino de toda la vida.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="icon-bubble" data-color="blue" style="min-width: 48px; width: 48px; height: 48px;">
+                <i data-lucide="award" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-bold mb-1">Trayectoria</div>
+                <div class="text-sm text-[color:var(--ink-soft)]">Décadas aprendiendo qué funciona.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="icon-bubble" data-color="yellow" style="min-width: 48px; width: 48px; height: 48px;">
+                <i data-lucide="lightbulb" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-bold mb-1">Asesoramiento</div>
+                <div class="text-sm text-[color:var(--ink-soft)]">Te guiamos en cada decisión.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="icon-bubble" data-color="green" style="min-width: 48px; width: 48px; height: 48px;">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-bold mb-1">Confianza</div>
+                <div class="text-sm text-[color:var(--ink-soft)]">Honestidad en cada recomendación.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
+  <!-- SERVICIOS / PRODUCTOS                       -->
+  <!-- =========================================== -->
+  <section id="servicios" class="py-20 md:py-28 relative dots-pattern">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 relative">
+      <div class="text-center max-w-2xl mx-auto mb-14 reveal">
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <div class="w-8 h-[3px] rounded-full" style="background: var(--blue);"></div>
+          <span class="text-sm font-bold uppercase tracking-wider" style="color: var(--blue);">Lo que ofrecemos</span>
+          <div class="w-8 h-[3px] rounded-full" style="background: var(--blue);"></div>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+          Todo lo que necesitás,
+          <span class="font-script" style="color: var(--red);">bajo un mismo techo.</span>
+        </h2>
+        <p class="text-lg text-[color:var(--ink-soft)]">
+          Desde la pintura perfecta hasta el último pincel. Te lo preparamos todo para que
+          solo tengas que preocuparte por disfrutar el resultado.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Card 1 -->
+        <div class="service-card p-6 reveal" data-color="red">
+          <div class="icon-bubble mb-5" data-color="red">
+            <i data-lucide="home" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Pinturas para hogar</h3>
+          <p class="text-sm text-[color:var(--ink-soft)] leading-relaxed mb-4">
+            Látex, esmaltes, sintéticos y acabados premium para interiores y exteriores.
+            Más de 200 colores para elegir.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--rose-soft); color: var(--red);">Látex</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--rose-soft); color: var(--red);">Esmalte</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--rose-soft); color: var(--red);">Sintético</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="service-card p-6 reveal" data-color="blue">
+          <div class="icon-bubble mb-5" data-color="blue">
+            <i data-lucide="hard-hat" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Pintura de obra</h3>
+          <p class="text-sm text-[color:var(--ink-soft)] leading-relaxed mb-4">
+            Productos profesionales para constructoras, pintores y contratistas.
+            Precios por volumen y entrega rápida.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--sky-soft); color: var(--blue);">Profesional</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--sky-soft); color: var(--blue);">Mayorista</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="service-card p-6 reveal" data-color="yellow">
+          <div class="icon-bubble mb-5" data-color="yellow">
+            <i data-lucide="paintbrush" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Accesorios y herramientas</h3>
+          <p class="text-sm text-[color:var(--ink-soft)] leading-relaxed mb-4">
+            Rodillos, pinceles, cintas, lijas, bandejas y todo lo que tu proyecto necesita.
+            Calidad que se nota en cada pasada.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--sun-soft); color: #8A6A00;">Rodillos</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--sun-soft); color: #8A6A00;">Pinceles</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--sun-soft); color: #8A6A00;">Cintas</span>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="service-card p-6 reveal" data-color="green">
+          <div class="icon-bubble mb-5" data-color="green">
+            <i data-lucide="sparkles" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Asesoramiento en color</h3>
+          <p class="text-sm text-[color:var(--ink-soft)] leading-relaxed mb-4">
+            ¿No sabés qué color elegir? Te ayudamos a combinar, probar y decidir con
+            muestras reales y consejos expertos.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--mint-soft); color: var(--green);">Personalizado</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background: var(--mint-soft); color: var(--green);">Muestras</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
+  <!-- OFERTAS DESTACADAS                          -->
+  <!-- =========================================== -->
+  <section id="ofertas" class="py-20 md:py-28 relative dots-pattern">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 relative">
+      <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <div class="w-8 h-[3px] rounded-full" style="background: var(--red);"></div>
+          <span class="text-sm font-bold uppercase tracking-wider" style="color: var(--red);">Ofertas</span>
+          <div class="w-8 h-[3px] rounded-full" style="background: var(--red);"></div>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+          Aprovechá nuestras
+          <span class="font-script" style="color: var(--blue);">ofertas</span>
+        </h2>
+        <p class="text-lg text-[color:var(--ink-soft)]">
+          Precios especiales en productos seleccionados. Stock limitado — pasá a buscarlos o
+          consultanos por WhatsApp.
+        </p>
+      </div>
+
+      <div class="offer-grid">
+        <!-- Oferta 1 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-20%</div>
+          <img
+            src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=600&auto=format&fit=crop&q=80"
+            alt="Látex interior premium 20 litros"
+            class="offer-card-img"
+            loading="lazy"
+          />
+          <div class="offer-card-body">
+            <h3>Látex interior premium 20L</h3>
+            <p>Látex de alta duración, lavable y cubritivo. Ideal para todo tipo de superficies interiores.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$45.900</span>
+              <span class="offer-price">$36.720</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20consultar%20por%20la%20oferta%20de%20L%C3%A1tex%20interior%20premium%2020L%20a%20$36.720" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+        <!-- Oferta 2 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-25%</div>
+          <img
+            src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&auto=format&fit=crop&q=80"
+            alt="Esmalte sintético brillante 4 litros"
+            class="offer-card-img"
+            loading="lazy"
+          />
+          <div class="offer-card-body">
+            <h3>Esmalte sintético brillante 4L</h3>
+            <p>Esmalte al solvente de alto brillo para interiores y exteriores. Secado rápido y excelente adherencia.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$18.500</span>
+              <span class="offer-price">$13.875</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20consultar%20por%20la%20oferta%20de%20Esmalte%20sint%C3%A9tico%20brillante%204L%20a%20$13.875" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+        <!-- Oferta 3 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-25%</div>
+          <img
+            src="https://images.unsplash.com/photo-1567721913486-6585f069b332?w=600&auto=format&fit=crop&q=80"
+            alt="Kit de pinceles profesional 5 piezas"
+            class="offer-card-img"
+            loading="lazy"
+          />
+          <div class="offer-card-body">
+            <h3>Kit pinceles profesional 5pz</h3>
+            <p>Set de pinceles de cerda natural y sintética con mango ergonómico. Para todo tipo de pinturas.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$12.300</span>
+              <span class="offer-price">$9.225</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20consultar%20por%20la%20oferta%20del%20Kit%20de%20pinceles%20profesional%205pz%20a%20$9.225" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-10 reveal">
+        <a href="ofertas.html" class="inline-flex items-center gap-2 font-semibold text-base" style="color: var(--red);">
+          Ver todas las ofertas
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
+  <!-- CALCULADORA                                 -->
+  <!-- =========================================== -->
+  <section id="calculadora" class="py-20 md:py-28 relative" style="background: linear-gradient(180deg, var(--cream) 0%, var(--sky-soft) 100%);">
+    <div class="max-w-5xl mx-auto px-5 sm:px-8">
+      <div class="text-center mb-12 reveal">
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <div class="w-8 h-[3px] rounded-full" style="background: var(--green);"></div>
+          <span class="text-sm font-bold uppercase tracking-wider" style="color: var(--green);">Herramienta útil</span>
+          <div class="w-8 h-[3px] rounded-full" style="background: var(--green);"></div>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+          Calculá cuánta pintura necesitás
+          <span class="font-script" style="color: var(--blue);">en segundos.</span>
+        </h2>
+        <p class="text-lg text-[color:var(--ink-soft)] max-w-2xl mx-auto">
+          Ingresá las medidas de tu pared y te decimos cuántos litros vas a necesitar.
+          Sin vueltas, sin adivinar.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-3xl shadow-xl p-6 md:p-10 reveal">
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Form -->
+          <div>
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+              <i data-lucide="ruler" class="w-5 h-5" style="color: var(--blue);"></i>
+              Medidas de tu pared
+            </h3>
+
+            <div class="space-y-4">
+              <div>
+                <label for="width" class="block text-sm font-semibold mb-1.5">Ancho de la pared (metros)</label>
+                <input type="number" id="width" class="calc-input" placeholder="Ej: 4" min="0.1" step="0.1" required aria-required="true" />
+              </div>
+              <div>
+                <label for="height" class="block text-sm font-semibold mb-1.5">Alto de la pared (metros)</label>
+                <input type="number" id="height" class="calc-input" placeholder="Ej: 2.5" min="0.1" step="0.1" required aria-required="true" />
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label for="doors" class="block text-sm font-semibold mb-1.5">Puertas</label>
+                  <input type="number" id="doors" class="calc-input" placeholder="0" min="0" value="0" />
+                </div>
+                <div>
+                  <label for="windows" class="block text-sm font-semibold mb-1.5">Ventanas</label>
+                  <input type="number" id="windows" class="calc-input" placeholder="0" min="0" value="0" />
+                </div>
+              </div>
+
+              <!-- Tipo de superficie -->
+              <div>
+                <label class="block text-sm font-semibold mb-2">Tipo de superficie</label>
+                <div class="flex flex-wrap gap-3">
+                  <label class="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="radio" name="surface" value="1" checked class="accent-[color:var(--blue)]" />
+                    Lisa (rendimiento estándar)
+                  </label>
+                  <label class="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="radio" name="surface" value="1.3" class="accent-[color:var(--blue)]" />
+                    Rugosa / Revocado (-30%)
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label for="coats" class="block text-sm font-semibold mb-1.5">Cantidad de manos</label>
+                <select id="coats" class="calc-input">
+                  <option value="1">1 mano</option>
+                  <option value="2" selected>2 manos (recomendado)</option>
+                  <option value="3">3 manos</option>
+                </select>
+              </div>
+
+              <button id="calc-btn" class="btn-primary w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold mt-2">
+                <i data-lucide="calculator" class="w-5 h-5"></i>
+                Calcular litros
+              </button>
+            </div>
+
+            <p class="text-xs text-[color:var(--ink-soft)] mt-4 leading-relaxed">
+              💡 <strong>Referencia:</strong> 1 litro rinde aproximadamente 10 m² por mano en superficie lisa.
+              En paredes rugosas el rendimiento puede reducirse hasta un 30%.
+            </p>
+          </div>
+
+          <!-- Resultado -->
+          <div class="flex flex-col justify-center">
+            <div id="result-placeholder" class="text-center py-10">
+              <div class="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4" style="background: var(--cream-deep);">
+                <i data-lucide="droplet" class="w-10 h-10" style="color: var(--blue);"></i>
+              </div>
+              <p class="font-semibold text-[color:var(--ink-soft)]">Ingresá las medidas para ver el resultado</p>
+              <p class="text-sm text-[color:var(--ink-soft)] mt-1">Te diremos exactamente cuánta pintura comprar.</p>
+            </div>
+
+            <div id="result-box" class="result-box hidden">
+              <div class="text-center">
+                <div class="text-sm font-semibold uppercase tracking-wider mb-2" style="color: var(--blue);">
+                  Vas a necesitar
+                </div>
+                <div class="text-6xl md:text-7xl font-extrabold mb-2" style="color: var(--ink);">
+                  <span id="liters-result">0</span>
+                  <span class="text-2xl font-bold text-[color:var(--ink-soft)]"> litros</span>
+                </div>
+                <div class="font-script text-2xl mb-4" style="color: var(--green);">
+                  ~ <span id="cans-result">0</span> latas de 4L
+                </div>
+                <div class="text-sm text-[color:var(--ink-soft)] space-y-1 border-t pt-4" style="border-color: rgba(46,111,230,0.2);">
+                  <div>📐 Superficie a pintar: <strong id="area-result">0 m²</strong></div>
+                  <div>🖌️ Manos de pintura: <strong id="coats-result">2</strong></div>
+                  <div>✅ Rendimiento: <strong>10 m²/litro</strong></div>
+                </div>
+                <a id="calc-whatsapp-btn" href="https://wa.me/5491155553333?text=Hola!%20Necesito%20cotizar%20pintura" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-5 py-3 rounded-full font-semibold text-sm mt-5 whatsapp-link">
+                  <i data-lucide="message-circle" class="w-4 h-4"></i>
+                  Cotizar por WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
+  <!-- TESTIMONIO                                  -->
+  <!-- =========================================== -->
+  <section class="py-20 md:py-24 relative" style="background: var(--cream);">
+    <div class="max-w-4xl mx-auto px-5 sm:px-8 text-center reveal">
+      <div class="quote-mark">"</div>
+      <p class="text-xl md:text-2xl font-medium leading-relaxed text-[color:var(--ink)] mb-6">
+        Voy a Proveesur desde que pinté mi primera casa. Siempre me atienden con una sonrisa,
+        me explican todo con paciencia y me recomiendan lo que realmente necesito.
+        <span class="font-script text-2xl md:text-3xl" style="color: var(--red);">Son parte del barrio.</span>
+      </p>
+      <div class="flex items-center justify-center gap-3">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold" style="background: var(--sun-soft); color: #8A6A00;">MG</div>
+        <div class="text-left">
+          <div class="font-bold">Marta González</div>
+          <div class="text-sm text-[color:var(--ink-soft)]">Cliente hace 20 años</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
+  <!-- CONTACTO                                    -->
+  <!-- =========================================== -->
+  <section id="contacto" class="py-20 md:py-28 relative" style="background: var(--cream-deep);">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-14 reveal">
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <div class="w-8 h-[3px] rounded-full" style="background: var(--red);"></div>
+          <span class="text-sm font-bold uppercase tracking-wider" style="color: var(--red);">Contacto</span>
+          <div class="w-8 h-[3px] rounded-full" style="background: var(--red);"></div>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+          Pasá a visitarnos
+          <span class="font-script" style="color: var(--blue);">o escribinos.</span>
+        </h2>
+        <p class="text-lg text-[color:var(--ink-soft)]">
+          Estamos a la vuelta de tu casa. Te esperamos con un café y todas las respuestas.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+
+        <!-- Info + Mapa -->
+        <div class="reveal space-y-6">
+          <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <h3 class="text-xl font-bold mb-5">Estamos acá</h3>
+            <div class="space-y-4">
+              <div class="flex items-start gap-4">
+                <div class="icon-bubble" data-color="red" style="min-width: 48px; width: 48px; height: 48px;">
+                  <i data-lucide="map-pin" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="font-semibold">Dirección</div>
+                  <div class="text-sm text-[color:var(--ink-soft)]">Av. Siempre Viva 1234, Barrio Sur</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="icon-bubble" data-color="blue" style="min-width: 48px; width: 48px; height: 48px;">
+                  <i data-lucide="phone" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="font-semibold">Teléfono</div>
+                  <a href="tel:+541100000000" class="text-sm text-[color:var(--ink-soft)] hover:underline">(011) 0000-0000</a>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="icon-bubble" data-color="green" style="min-width: 48px; width: 48px; height: 48px;">
+                  <i data-lucide="message-circle" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="font-semibold">WhatsApp</div>
+                  <a href="https://wa.me/5491155553333" target="_blank" rel="noopener" class="text-sm hover:underline whatsapp-link" style="color: var(--green);">+54 9 11 0000-0000</a>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="icon-bubble" data-color="yellow" style="min-width: 48px; width: 48px; height: 48px;">
+                  <i data-lucide="clock" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="font-semibold">Horarios</div>
+                  <div class="text-sm text-[color:var(--ink-soft)]">Lun a Vie: 8:00 – 19:00<br />Sáb: 8:30 – 13:30</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Redes -->
+            <div class="mt-6 pt-6 border-t border-[color:var(--cream-deep)]">
+              <div class="text-sm font-semibold mb-3">Seguinos en redes</div>
+              <div class="flex gap-2">
+                <a href="#" aria-label="Instagram de Proveesur" class="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:-translate-y-0.5" style="background: var(--rose-soft); color: var(--red);">
+                  <i data-lucide="instagram" class="w-5 h-5"></i>
+                </a>
+                <a href="#" aria-label="Facebook de Proveesur" class="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:-translate-y-0.5" style="background: var(--sky-soft); color: var(--blue);">
+                  <i data-lucide="facebook" class="w-5 h-5"></i>
+                </a>
+                <a href="#" aria-label="WhatsApp de Proveesur" class="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:-translate-y-0.5" style="background: var(--mint-soft); color: var(--green);">
+                  <i data-lucide="message-circle" class="w-5 h-5"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mapa -->
+          <div class="map-wrap">
+            <iframe
+              title="Ubicación de Proveesur en el mapa"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3283.6784753084853!2d-58.38375908477042!3d-34.60373888045693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccacb00000001%3A0x40a81dfe5f51070!2sPlaza%20de%20Mayo!5e0!3m2!1ses-419!2sar!4v1700000000000"
+              width="100%"
+              height="280"
+              style="border:0; display:block;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Formulario -->
+        <div class="reveal">
+          <form id="contact-form" class="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-4" novalidate>
+            <h3 class="text-xl font-bold mb-2">Escribinos tu consulta</h3>
+            <p class="text-sm text-[color:var(--ink-soft)] mb-4">
+              Te respondemos en menos de 24 hs. ¡Contanos tu proyecto!
+            </p>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="name" class="block text-sm font-semibold mb-1.5">Nombre <span class="text-[color:var(--red)]">*</span></label>
+                <input type="text" id="name" required class="form-field" placeholder="Tu nombre" aria-required="true" />
+              </div>
+              <div>
+                <label for="phone" class="block text-sm font-semibold mb-1.5">Teléfono</label>
+                <input type="tel" id="phone" class="form-field" placeholder="11 0000-0000" />
+              </div>
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm font-semibold mb-1.5">Email <span class="text-[color:var(--red)]">*</span></label>
+              <input type="email" id="email" required class="form-field" placeholder="tu@email.com" aria-required="true" />
+            </div>
+
+            <div>
+              <label for="subject" class="block text-sm font-semibold mb-1.5">Motivo</label>
+              <select id="subject" class="form-field">
+                <option>Consulta general</option>
+                <option>Asesoramiento en color</option>
+                <option>Presupuesto obra</option>
+                <option>Productos específicos</option>
+                <option>Otro</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="message" class="block text-sm font-semibold mb-1.5">Mensaje <span class="text-[color:var(--red)]">*</span></label>
+              <textarea id="message" required rows="4" class="form-field resize-none" placeholder="Contanos en qué te podemos ayudar..." aria-required="true"></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold">
+              <i data-lucide="send" class="w-5 h-5"></i>
+              Enviar consulta
+            </button>
+
+            <p class="text-xs text-[color:var(--ink-soft)] text-center leading-relaxed">
+              🔒 Tu información es confidencial. Nunca la compartimos con terceros.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
+  <!-- FOOTER                                      -->
+  <!-- =========================================== -->
+  <footer class="py-10 md:py-14" style="background: var(--ink); color: white;">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <div class="logo-text mb-3" style="font-size: 2.25rem;">
+            <span class="l1">P</span><span class="l2">r</span><span class="l3">o</span><span class="l4">v</span><span style="color: white;">eesur</span>
+          </div>
+          <p class="text-sm text-white/70 leading-relaxed max-w-xs">
+            La pinturería de barrio con alma. Acompañándote desde hace más de 30 años
+            a darle color a tus proyectos.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-3 text-sm uppercase tracking-wider">Enlaces</h4>
+          <ul class="space-y-2 text-sm text-white/70">
+            <li><a href="#inicio" class="hover:text-white transition-colors">Inicio</a></li>
+            <li><a href="#nosotros" class="hover:text-white transition-colors">Nosotros</a></li>
+            <li><a href="#servicios" class="hover:text-white transition-colors">Productos</a></li>
+            <li><a href="ofertas.html" class="hover:text-white transition-colors">Ofertas</a></li>
+            <li><a href="#calculadora" class="hover:text-white transition-colors">Calculadora</a></li>
+            <li><a href="#contacto" class="hover:text-white transition-colors">Contacto</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-3 text-sm uppercase tracking-wider">Contacto</h4>
+          <ul class="space-y-2 text-sm text-white/70">
+            <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Av. Siempre Viva 1234</li>
+            <li class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> (011) 0000-0000</li>
+            <li class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i> hola@proveesur.com</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-white/50">© 2026 Proveesur. Todos los derechos reservados.</p>
+        <p class="text-xs text-white/50 font-script text-lg" style="color: var(--yellow);">
+          Hecho con cariño en el barrio ♥
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Flash message -->
+  <div id="flash" class="flash">
+    <div class="flex items-center gap-3">
+      <i data-lucide="check-circle" class="w-5 h-5" style="color: var(--green);"></i>
+      <span id="flash-text" class="font-medium">Mensaje enviado</span>
+    </div>
+  </div>
+
+  <!-- Service Worker status -->
+  <div id="sw-status" class="sw-status">✓ App lista para usar sin conexión</div>
+
+  <!-- WhatsApp flotante -->
+  <a
+    href="https://wa.me/5491155553333?text=Hola!%20Quiero%20asesoramiento%20sobre%20pinturas"
+    target="_blank"
+    rel="noopener"
+    class="whatsapp-fab"
+    aria-label="Contactar por WhatsApp"
+    title="Chateá con Proveesur">
+    <div class="whatsapp-fab-pulse"></div>
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+      <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
+    </svg>
+  </a>
+
+  <!-- Script principal -->
+  <script defer src="app.js"></script>
+</body>
+</html>

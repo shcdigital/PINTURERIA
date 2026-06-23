@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Proveesur — Ofertas especiales en pinturas, accesorios y herramientas. Aprovechá descuentos exclusivos por tiempo limitado." />
+  <title>Ofertas · Proveesur — Pinturería de barrio con alma</title>
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://proveesur.com/ofertas" />
+  <meta property="og:title" content="Ofertas · Proveesur" />
+  <meta property="og:description" content="Descuentos especiales en pinturas y accesorios. Stock limitado." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1200&auto=format&fit=crop&q=80" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="es_AR" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ofertas · Proveesur" />
+  <meta name="twitter:description" content="Descuentos especiales en pinturas y accesorios. Stock limitado." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1200&auto=format&fit=crop&q=80" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Proveesur",
+    "url": "https://proveesur.com",
+    "telephone": "+54-11-0000-0000",
+    "email": "hola@proveesur.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Av. Siempre Viva 1234",
+      "addressLocality": "Barrio Sur",
+      "addressCountry": "AR"
+    }
+  }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="overflow-x-hidden">
+
+  <!-- =========================================== -->
+  <!-- NAVBAR                                      -->
+  <!-- =========================================== -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background: rgba(251, 247, 241, 0.85); backdrop-filter: saturate(180%) blur(12px);">
+    <nav class="max-w-7xl mx-auto px-5 sm:px-8 py-4 flex items-center justify-between">
+      <a href="/" class="logo-text" aria-label="Proveesur — Inicio">
+        <span class="l1">P</span><span class="l2">r</span><span class="l3">o</span><span class="l4">v</span><span class="rest">eesur</span>
+      </a>
+
+      <ul class="hidden lg:flex items-center gap-8 text-sm font-medium text-[color:var(--ink-soft)]">
+        <li><a href="/#inicio" class="nav-link">Inicio</a></li>
+        <li><a href="/#nosotros" class="nav-link">Nosotros</a></li>
+        <li><a href="/#servicios" class="nav-link">Productos</a></li>
+        <li><a href="/#calculadora" class="nav-link">Calculadora</a></li>
+        <li><a href="/#contacto" class="nav-link">Contacto</a></li>
+      </ul>
+
+      <a href="/#contacto" class="hidden lg:inline-flex btn-primary px-5 py-2.5 rounded-full text-sm font-semibold items-center gap-2">
+        <i data-lucide="palette" class="w-4 h-4"></i>
+        Pedí asesoramiento
+      </a>
+
+      <button id="menu-toggle" class="lg:hidden p-2 rounded-lg hover:bg-[color:var(--cream-deep)]" aria-label="Abrir menú">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </nav>
+
+    <div id="mobile-menu" class="mobile-menu lg:hidden absolute top-full left-0 right-0 bg-white border-t border-[color:var(--cream-deep)] shadow-xl">
+      <ul class="flex flex-col px-6 py-4 gap-1 text-[color:var(--ink-soft)]">
+        <li><a href="/#inicio" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Inicio</a></li>
+        <li><a href="/#nosotros" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Nosotros</a></li>
+        <li><a href="/#servicios" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Productos</a></li>
+        <li><a href="/#calculadora" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Calculadora</a></li>
+        <li><a href="/#contacto" class="block py-3 font-medium">Contacto</a></li>
+        <li class="pt-2">
+          <a href="/#contacto" class="btn-primary inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold w-full justify-center">
+            <i data-lucide="palette" class="w-4 h-4"></i> Pedí asesoramiento
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- =========================================== -->
+  <!-- HERO OFERTAS                                -->
+  <!-- =========================================== -->
+  <section class="offer-hero">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      <div class="flex items-center justify-center gap-2 mb-4">
+        <div class="w-8 h-[3px] rounded-full" style="background: var(--red);"></div>
+        <span class="text-sm font-bold uppercase tracking-wider" style="color: var(--red);">Ofertas del mes</span>
+        <div class="w-8 h-[3px] rounded-full" style="background: var(--red);"></div>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
+        Aprovechá precios
+        <span class="font-script" style="color: var(--blue);">especiales</span>
+      </h1>
+      <p class="text-lg text-[color:var(--ink-soft)] max-w-2xl mx-auto">
+        Productos seleccionados con descuentos de hasta el 30%. Stock limitado —
+        una vez que se terminan, se terminan.
+      </p>
+      <p class="text-sm text-[color:var(--ink-soft)] mt-3">
+        <i data-lucide="info" class="w-4 h-4 inline align-text-bottom"></i>
+        Todos los precios incluyen IVA. Consultá por WhatsApp para reservar tu producto.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
+  <!-- CATÁLOGO DE OFERTAS                         -->
+  <!-- =========================================== -->
+  <section class="pb-20 md:pb-28" style="background: var(--cream);">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      <div class="offer-grid">
+
+        <!-- 1 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-20%</div>
+          <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=600&auto=format&fit=crop&q=80" alt="Látex interior premium 20 litros" class="offer-card-img" loading="lazy" />
+          <div class="offer-card-body">
+            <h3>Látex interior premium 20L</h3>
+            <p>Alta duración, lavable y cubritivo. Para todo tipo de superficies interiores.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$45.900</span>
+              <span class="offer-price">$36.720</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20la%20oferta%20de%20L%C3%A1tex%20interior%20premium%2020L%20a%20$36.720" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-25%</div>
+          <img src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&auto=format&fit=crop&q=80" alt="Esmalte sintético brillante 4 litros" class="offer-card-img" loading="lazy" />
+          <div class="offer-card-body">
+            <h3>Esmalte sintético brillante 4L</h3>
+            <p>Alto brillo para interior y exterior. Secado rápido y excelente adherencia.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$18.500</span>
+              <span class="offer-price">$13.875</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20la%20oferta%20de%20Esmalte%20sint%C3%A9tico%20brillante%204L%20a%20$13.875" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-25%</div>
+          <img src="https://images.unsplash.com/photo-1567721913486-6585f069b332?w=600&auto=format&fit=crop&q=80" alt="Kit de pinceles profesional 5 piezas" class="offer-card-img" loading="lazy" />
+          <div class="offer-card-body">
+            <h3>Kit pinceles profesional 5pz</h3>
+            <p>Cerda natural y sintética con mango ergonómico. Para todo tipo de pinturas.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$12.300</span>
+              <span class="offer-price">$9.225</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20la%20oferta%20del%20Kit%20de%20pinceles%20profesional%205pz%20a%20$9.225" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-25%</div>
+          <img src="https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=600&auto=format&fit=crop&q=80" alt="Enduido plástico 10 kilogramos" class="offer-card-img" loading="lazy" />
+          <div class="offer-card-body">
+            <h3>Enduido plástico 10kg</h3>
+            <p>Para reparación de paredes, grietas y desniveles. Listo para usar, fácil de lijar.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$8.900</span>
+              <span class="offer-price">$6.675</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20la%20oferta%20de%20Enduido%20pl%C3%A1stico%2010kg%20a%20$6.675" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-25%</div>
+          <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=600&auto=format&fit=crop&q=80" alt="Rodillo profesional 25 centímetros" class="offer-card-img" loading="lazy" />
+          <div class="offer-card-body">
+            <h3>Rodillo profesional 25cm</h3>
+            <p>Felpa de alta densidad para acabado liso. Ideal para látex y esmaltes al agua.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$5.400</span>
+              <span class="offer-price">$4.050</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20la%20oferta%20del%20Rodillo%20profesional%2025cm%20a%20$4.050" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-30%</div>
+          <img src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&auto=format&fit=crop&q=80" alt="Lija al agua surtida 10 unidades" class="offer-card-img" loading="lazy" />
+          <div class="offer-card-body">
+            <h3>Lija al agua surtida 10u</h3>
+            <p>Granos 180 a 400. Ideal para lijar enduido, madera y superficies pintadas.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$3.200</span>
+              <span class="offer-price">$2.240</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20la%20oferta%20de%20Lija%20al%20agua%20surtida%2010u%20a%20$2.240" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-25%</div>
+          <img src="https://images.unsplash.com/photo-1567721913486-6585f069b332?w=600&auto=format&fit=crop&q=80" alt="Barniz marine brillante 1 litro" class="offer-card-img" loading="lazy" />
+          <div class="offer-card-body">
+            <h3>Barniz marine brillante 1L</h3>
+            <p>Protección superior para exteriores. Resistente a rayos UV, agua salada y humedad.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$14.200</span>
+              <span class="offer-price">$10.650</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20la%20oferta%20de%20Barniz%20marine%20brillante%201L%20a%20$10.650" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="offer-card reveal">
+          <div class="offer-badge">-25%</div>
+          <img src="https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=600&auto=format&fit=crop&q=80" alt="Masilla plástica 500 gramos" class="offer-card-img" loading="lazy" />
+          <div class="offer-card-body">
+            <h3>Masilla plástica 500g</h3>
+            <p>Para reparar maderas, tapar agujeros y fisuras. Secado rápido y lijado suave.</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$4.100</span>
+              <span class="offer-price">$3.075</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=Hola!%20Quiero%20la%20oferta%20de%20Masilla%20pl%C3%A1stica%20500g%20a%20$3.075" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="text-center mt-12 reveal">
+        <p class="text-sm text-[color:var(--ink-soft)] mb-4">¿No encontrás lo que buscás? Pedinos presupuesto personalizado.</p>
+        <a href="/#contacto" class="btn-primary inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold">
+          <i data-lucide="message-circle" class="w-5 h-5"></i>
+          Consultanos
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
+  <!-- FOOTER                                      -->
+  <!-- =========================================== -->
+  <footer class="py-10 md:py-14" style="background: var(--ink); color: white;">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <div class="logo-text mb-3" style="font-size: 2.25rem;">
+            <span class="l1">P</span><span class="l2">r</span><span class="l3">o</span><span class="l4">v</span><span style="color: white;">eesur</span>
+          </div>
+          <p class="text-sm text-white/70 leading-relaxed max-w-xs">
+            La pinturería de barrio con alma. Acompañándote desde hace más de 30 años
+            a darle color a tus proyectos.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-3 text-sm uppercase tracking-wider">Enlaces</h4>
+          <ul class="space-y-2 text-sm text-white/70">
+            <li><a href="/#inicio" class="hover:text-white transition-colors">Inicio</a></li>
+            <li><a href="/#nosotros" class="hover:text-white transition-colors">Nosotros</a></li>
+            <li><a href="/#servicios" class="hover:text-white transition-colors">Productos</a></li>
+            <li><a href="ofertas.html" class="hover:text-white transition-colors">Ofertas</a></li>
+            <li><a href="/#calculadora" class="hover:text-white transition-colors">Calculadora</a></li>
+            <li><a href="/#contacto" class="hover:text-white transition-colors">Contacto</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-3 text-sm uppercase tracking-wider">Contacto</h4>
+          <ul class="space-y-2 text-sm text-white/70">
+            <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Av. Siempre Viva 1234</li>
+            <li class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> (011) 0000-0000</li>
+            <li class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i> hola@proveesur.com</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-white/50">© 2026 Proveesur. Todos los derechos reservados.</p>
+        <p class="text-xs text-white/50 font-script text-lg" style="color: var(--yellow);">
+          Hecho con cariño en el barrio ♥
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Flash message -->
+  <div id="flash" class="flash">
+    <div class="flex items-center gap-3">
+      <i data-lucide="check-circle" class="w-5 h-5" style="color: var(--green);"></i>
+      <span id="flash-text" class="font-medium">Mensaje enviado</span>
+    </div>
+  </div>
+
+  <!-- Service Worker status -->
+  <div id="sw-status" class="sw-status">✓ App lista para usar sin conexión</div>
+
+  <!-- WhatsApp flotante -->
+  <a
+    href="https://wa.me/5491155553333?text=Hola!%20Quiero%20consultar%20por%20una%20oferta"
+    target="_blank"
+    rel="noopener"
+    class="whatsapp-fab"
+    aria-label="Contactar por WhatsApp"
+    title="Chateá con Proveesur">
+    <div class="whatsapp-fab-pulse"></div>
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+      <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
+    </svg>
+  </a>
+
+  <!-- Script principal -->
+  <script defer src="app.js"></script>
+</body>
+</html>
