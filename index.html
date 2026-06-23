@@ -96,6 +96,8 @@
         <li><a href="#inicio" class="nav-link">Inicio</a></li>
         <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
         <li><a href="#servicios" class="nav-link">Productos</a></li>
+        <li><a href="ofertas.html" class="nav-link">Ofertas</a></li>
+        <li><a href="visualizador.html" class="nav-link" style="color:var(--red);font-weight:700">🎨 Probá colores</a></li>
         <li><a href="#calculadora" class="nav-link">Calculadora</a></li>
         <li><a href="#contacto" class="nav-link">Contacto</a></li>
       </ul>
@@ -117,6 +119,8 @@
         <li><a href="#inicio" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Inicio</a></li>
         <li><a href="#nosotros" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Nosotros</a></li>
         <li><a href="#servicios" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Productos</a></li>
+        <li><a href="ofertas.html" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Ofertas</a></li>
+        <li><a href="visualizador.html" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium" style="color:var(--red);font-weight:700">🎨 Probá colores</a></li>
         <li><a href="#calculadora" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Calculadora</a></li>
         <li><a href="#contacto" class="block py-3 font-medium">Contacto</a></li>
         <li class="pt-2">
@@ -519,6 +523,61 @@
   </section>
 
   <!-- =========================================== -->
+  <!-- VISUALIZADOR DESTACADO                      -->
+  <!-- =========================================== -->
+  <section class="py-20 md:py-28 relative overflow-hidden" style="background: linear-gradient(135deg, var(--sky-soft) 0%, var(--mint-soft) 100%);">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 relative">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div class="reveal">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-[3px] rounded-full" style="background: var(--blue);"></div>
+            <span class="text-sm font-bold uppercase tracking-wider" style="color: var(--blue);">Nueva herramienta</span>
+          </div>
+          <h2 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+            Probá colores en tu pared
+            <span class="font-script" style="color: var(--red);">antes de pintar.</span>
+          </h2>
+          <p class="text-lg text-[color:var(--ink-soft)] mb-3 leading-relaxed">
+            Subí una foto de tu habitación y aplicá distintos colores con un solo click.
+            Vas a ver exactamente cómo queda cada tono en tu pared, sin comprar una muestra.
+          </p>
+          <ul class="space-y-2 mb-6 text-sm text-[color:var(--ink-soft)]">
+            <li class="flex items-center gap-2">📸 Subí una foto de tu habitación</li>
+            <li class="flex items-center gap-2">🎨 Hacé click en la pared para cambiarle el color</li>
+            <li class="flex items-center gap-2">💾 Descargá el resultado y mostranoslo por WhatsApp</li>
+          </ul>
+          <a href="visualizador.html" class="btn-primary inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold">
+            <i data-lucide="wand-2" class="w-5 h-5"></i>
+            Probar ahora
+          </a>
+        </div>
+        <div class="reveal relative">
+          <div class="bg-white rounded-3xl shadow-xl p-3">
+            <img
+              src="https://images.unsplash.com/photo-1586105251261-72a756497a11?w=800&auto=format&fit=crop&q=80"
+              alt="Habitación con paredes pintadas de distintos colores"
+              class="w-full h-[320px] md:h-[400px] object-cover rounded-2xl"
+              loading="lazy"
+            />
+          </div>
+          <!-- Badge flotante -->
+          <div class="absolute -bottom-3 -right-3 bg-white rounded-2xl shadow-xl px-4 py-3 border border-[color:var(--cream-deep)]">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: var(--rose-soft);">
+                <span class="text-sm font-bold" style="color: var(--red);">🎨</span>
+              </div>
+              <div>
+                <div class="font-bold text-sm">100% gratis</div>
+                <div class="text-xs text-[color:var(--ink-soft)]">Sin registro</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================== -->
   <!-- CALCULADORA                                 -->
   <!-- =========================================== -->
   <section id="calculadora" class="py-20 md:py-28 relative" style="background: linear-gradient(180deg, var(--cream) 0%, var(--sky-soft) 100%);">
@@ -838,6 +897,7 @@
             <li><a href="#nosotros" class="hover:text-white transition-colors">Nosotros</a></li>
             <li><a href="#servicios" class="hover:text-white transition-colors">Productos</a></li>
             <li><a href="ofertas.html" class="hover:text-white transition-colors">Ofertas</a></li>
+            <li><a href="visualizador.html" class="hover:text-white transition-colors">Probá colores</a></li>
             <li><a href="#calculadora" class="hover:text-white transition-colors">Calculadora</a></li>
             <li><a href="#contacto" class="hover:text-white transition-colors">Contacto</a></li>
           </ul>

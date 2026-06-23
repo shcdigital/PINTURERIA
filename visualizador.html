@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Proveesur — Probá colores en tus paredes. Subí una foto y aplicá distintos tonos para encontrar el color perfecto para tu hogar." />
+  <base href="/PINTURERIA/" />
+  <title>Probá colores · Proveesur — Visualizador de pintura</title>
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Probá colores en tus paredes · Proveesur" />
+  <meta property="og:description" content="Subí una foto de tu habitación y probá distintos colores de pintura antes de comprar." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1200&auto=format&fit=crop&q=80" />
+  <meta property="og:locale" content="es_AR" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    .canvas-wrap {
+      position: relative;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: var(--shadow-lift);
+      background: white;
+      touch-action: none;
+    }
+    .canvas-wrap canvas {
+      display: block;
+      width: 100%;
+      max-height: 600px;
+      object-fit: contain;
+    }
+    .color-swatch {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      flex-shrink: 0;
+    }
+    .color-swatch:hover {
+      transform: scale(1.12);
+    }
+    .color-swatch.active {
+      border-color: var(--ink);
+      transform: scale(1.12);
+    }
+    .custom-color-wrap {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px dashed var(--cream-deep);
+      flex-shrink: 0;
+    }
+    .custom-color-wrap input {
+      position: absolute;
+      inset: -4px;
+      width: calc(100% + 8px);
+      height: calc(100% + 8px);
+      cursor: pointer;
+      border: none;
+      padding: 0;
+    }
+    .tolerance-slider {
+      width: 100%;
+      accent-color: var(--blue);
+      height: 6px;
+      border-radius: 3px;
+    }
+    .v-hero {
+      padding: 7rem 0 2rem;
+      text-align: center;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(46, 111, 230, 0.10), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(46, 158, 107, 0.10), transparent 40%),
+        var(--cream);
+    }
+    .v-hint {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.65);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+    .v-hint.hidden { opacity: 0; }
+  </style>
+</head>
+<body class="overflow-x-hidden">
+
+  <!-- ═══ NAVBAR ═══ -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background: rgba(251, 247, 241, 0.85); backdrop-filter: saturate(180%) blur(12px);">
+    <nav class="max-w-7xl mx-auto px-5 sm:px-8 py-4 flex items-center justify-between">
+      <a href="index.html" class="logo-text" aria-label="Proveesur — Inicio">
+        <span class="l1">P</span><span class="l2">r</span><span class="l3">o</span><span class="l4">v</span><span class="rest">eesur</span>
+      </a>
+      <ul class="hidden lg:flex items-center gap-8 text-sm font-medium text-[color:var(--ink-soft)]">
+        <li><a href="index.html#inicio" class="nav-link">Inicio</a></li>
+        <li><a href="index.html#servicios" class="nav-link">Productos</a></li>
+        <li><a href="ofertas.html" class="nav-link">Ofertas</a></li>
+        <li><a href="index.html#calculadora" class="nav-link">Calculadora</a></li>
+        <li><a href="visualizador.html" class="nav-link" style="color:var(--red);font-weight:700">🎨 Probá colores</a></li>
+        <li><a href="index.html#contacto" class="nav-link">Contacto</a></li>
+      </ul>
+      <a href="index.html#contacto" class="hidden lg:inline-flex btn-primary px-5 py-2.5 rounded-full text-sm font-semibold items-center gap-2">
+        <i data-lucide="palette" class="w-4 h-4"></i> Pedí asesoramiento
+      </a>
+      <button id="menu-toggle" class="lg:hidden p-2 rounded-lg hover:bg-[color:var(--cream-deep)]" aria-label="Abrir menú">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="mobile-menu lg:hidden absolute top-full left-0 right-0 bg-white border-t border-[color:var(--cream-deep)] shadow-xl">
+      <ul class="flex flex-col px-6 py-4 gap-1 text-[color:var(--ink-soft)]">
+        <li><a href="index.html#inicio" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Inicio</a></li>
+        <li><a href="index.html#servicios" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Productos</a></li>
+        <li><a href="ofertas.html" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Ofertas</a></li>
+        <li><a href="index.html#calculadora" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium">Calculadora</a></li>
+        <li><a href="visualizador.html" class="block py-3 border-b border-[color:var(--cream-deep)] font-medium" style="color:var(--red);font-weight:700">🎨 Probá colores</a></li>
+        <li><a href="index.html#contacto" class="block py-3 font-medium">Contacto</a></li>
+        <li class="pt-2">
+          <a href="index.html#contacto" class="btn-primary inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold w-full justify-center">
+            <i data-lucide="palette" class="w-4 h-4"></i> Pedí asesoramiento
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="v-hero">
+    <div class="max-w-4xl mx-auto px-5 sm:px-8">
+      <div class="flex items-center justify-center gap-2 mb-4">
+        <div class="w-8 h-[3px] rounded-full" style="background: var(--blue);"></div>
+        <span class="text-sm font-bold uppercase tracking-wider" style="color: var(--blue);">Visualizador</span>
+        <div class="w-8 h-[3px] rounded-full" style="background: var(--blue);"></div>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
+        Probá colores en
+        <span class="font-script" style="color: var(--red);">tu pared</span>
+      </h1>
+      <p class="text-lg text-[color:var(--ink-soft)] max-w-2xl mx-auto">
+        Subí una foto de tu habitación y hacé click en la pared para cambiarle el color.
+        Así vas a saber exactamente cómo queda antes de comprar.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ VISUALIZADOR ═══ -->
+  <section class="py-10 md:py-16" style="background: var(--cream);">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8">
+
+      <!-- Drop zone + Canvas -->
+      <div class="canvas-wrap" id="canvas-wrap">
+        <div id="drop-zone" style="padding:4rem 2rem;text-align:center;cursor:pointer;min-height:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem">
+          <div style="width:80px;height:80px;border-radius:1.5rem;display:flex;align-items:center;justify-content:center;background:var(--sky-soft);color:var(--blue)">
+            <i data-lucide="image-plus" class="w-10 h-10"></i>
+          </div>
+          <div>
+            <p class="font-bold text-lg">Subí una foto de tu habitación</p>
+            <p class="text-sm text-[color:var(--ink-soft)] mt-1">Arrastrá una imagen o hacé click para seleccionar</p>
+          </div>
+          <input type="file" id="file-input" accept="image/*" style="display:none" />
+        </div>
+        <canvas id="canvas" style="display:none"></canvas>
+        <div id="canvas-hint" class="v-hint">💡 Hacé click en la pared que querés cambiar</div>
+      </div>
+
+      <!-- Controles -->
+      <div id="controls" class="hidden" style="margin-top:1.5rem">
+        <div class="bg-white rounded-2xl shadow-lg p-5 md:p-6">
+          <div class="grid md:grid-cols-2 gap-6">
+
+            <!-- Paleta de colores -->
+            <div>
+              <div class="text-sm font-semibold mb-3">Elegí un color</div>
+              <div id="palette" class="flex flex-wrap gap-2.5 items-center">
+                <div class="color-swatch active" data-color="#E63946" style="background:#E63946" title="Rojo Proveesur"></div>
+                <div class="color-swatch" data-color="#2E6FE6" style="background:#2E6FE6" title="Azul Proveesur"></div>
+                <div class="color-swatch" data-color="#2E9E6B" style="background:#2E9E6B" title="Verde Proveesur"></div>
+                <div class="color-swatch" data-color="#F5B800" style="background:#F5B800" title="Amarillo Proveesur"></div>
+                <div class="color-swatch" data-color="#D4A373" style="background:#D4A373" title="Beige"></div>
+                <div class="color-swatch" data-color="#E0E1DD" style="background:#E0E1DD" title="Blanco roto"></div>
+                <div class="color-swatch" data-color="#7B2CBF" style="background:#7B2CBF" title="Púrpura"></div>
+                <div class="color-swatch" data-color="#F4A261" style="background:#F4A261" title="Naranja"></div>
+                <div class="color-swatch" data-color="#264653" style="background:#264653" title="Azul oscuro"></div>
+                <div class="color-swatch" data-color="#F8EDEB" style="background:#F8EDEB;border:1px solid var(--cream-deep)" title="Blanco"></div>
+                <div class="color-swatch" data-color="#A3B18A" style="background:#A3B18A" title="Verde salvia"></div>
+                <div class="color-swatch" data-color="#CD5C5C" style="background:#CD5C5C" title="Terracota"></div>
+                <div class="custom-color-wrap" title="Color personalizado">
+                  <input type="color" id="custom-color" value="#E63946" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Tolerancia + Acciones -->
+            <div>
+              <div class="text-sm font-semibold mb-3">Ajustes</div>
+              <div class="space-y-3">
+                <div>
+                  <label class="text-xs text-[color:var(--ink-soft)] flex justify-between">
+                    <span>Tolerancia del color</span>
+                    <span id="tolerance-label">30%</span>
+                  </label>
+                  <input type="range" id="tolerance" class="tolerance-slider" min="5" max="60" value="30" />
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button id="btn-undo" class="btn btn-secondary btn-sm" disabled>
+                    <i data-lucide="undo-2" class="w-4 h-4"></i> Deshacer
+                  </button>
+                  <button id="btn-reset" class="btn btn-secondary btn-sm">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Restaurar original
+                  </button>
+                  <button id="btn-download" class="btn btn-primary btn-sm">
+                    <i data-lucide="download" class="w-4 h-4"></i> Descargar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA WhatsApp -->
+      <div id="cta-wa" class="hidden text-center mt-6 reveal">
+        <p class="text-[color:var(--ink-soft)] mb-3">
+          ¿Ya encontraste el color ideal? Consultanos el precio y disponibilidad.
+        </p>
+        <a href="https://wa.me/5491155553333?text=Hola!%20Estuve%20probando%20colores%20en%20el%20visualizador%20de%20Proveesur%20y%20quiero%20consultar%20por%20un%20color" target="_blank" rel="noopener" class="btn-whatsapp inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold whatsapp-link">
+          <i data-lucide="message-circle" class="w-5 h-5"></i>
+          Consultar por WhatsApp
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="py-10 md:py-14" style="background: var(--ink); color: white;">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <div class="logo-text mb-3" style="font-size: 2.25rem;">
+            <span class="l1">P</span><span class="l2">r</span><span class="l3">o</span><span class="l4">v</span><span style="color: white;">eesur</span>
+          </div>
+          <p class="text-sm text-white/70 leading-relaxed max-w-xs">
+            La pinturería de barrio con alma. Acompañándote desde hace más de 30 años a darle color a tus proyectos.
+          </p>
+        </div>
+        <div>
+          <h4 class="font-bold mb-3 text-sm uppercase tracking-wider">Enlaces</h4>
+          <ul class="space-y-2 text-sm text-white/70">
+            <li><a href="index.html" class="hover:text-white transition-colors">Inicio</a></li>
+            <li><a href="index.html#servicios" class="hover:text-white transition-colors">Productos</a></li>
+            <li><a href="ofertas.html" class="hover:text-white transition-colors">Ofertas</a></li>
+            <li><a href="visualizador.html" class="hover:text-white transition-colors">Probá colores</a></li>
+            <li><a href="index.html#calculadora" class="hover:text-white transition-colors">Calculadora</a></li>
+            <li><a href="index.html#contacto" class="hover:text-white transition-colors">Contacto</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-3 text-sm uppercase tracking-wider">Contacto</h4>
+          <ul class="space-y-2 text-sm text-white/70">
+            <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Av. Siempre Viva 1234</li>
+            <li class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> (011) 0000-0000</li>
+            <li class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i> hola@proveesur.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-white/50">© 2026 Proveesur. Todos los derechos reservados.</p>
+        <p class="text-xs text-white/50 font-script text-lg" style="color: var(--yellow);">
+          Hecho con cariño en el barrio ♥
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ SCRIPTS ═══ -->
+  <script defer src="app.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+
+      // ─── Elementos ──────────────────────────────
+      const dropZone = document.getElementById('drop-zone');
+      const fileInput = document.getElementById('file-input');
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      const canvasWrap = document.getElementById('canvas-wrap');
+      const hint = document.getElementById('canvas-hint');
+      const controls = document.getElementById('controls');
+      const ctaWa = document.getElementById('cta-wa');
+      const palette = document.getElementById('palette');
+      const customColor = document.getElementById('custom-color');
+      const toleranceSlider = document.getElementById('tolerance');
+      const toleranceLabel = document.getElementById('tolerance-label');
+      const btnUndo = document.getElementById('btn-undo');
+      const btnReset = document.getElementById('btn-reset');
+      const btnDownload = document.getElementById('btn-download');
+
+      let originalImageData = null;
+      let previousImageData = null;
+      let selectedColor = '#E63946';
+
+      // ─── Cargar imagen ──────────────────────────
+      function loadImage(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const maxW = 1000;
+            const scale = Math.min(1, maxW / img.width);
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            dropZone.style.display = 'none';
+            canvas.style.display = 'block';
+            controls.classList.remove('hidden');
+            ctaWa.classList.remove('hidden');
+            hint.classList.remove('hidden');
+            btnUndo.disabled = true;
+            lucide.createIcons();
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      dropZone.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) loadImage(e.target.files[0]);
+      });
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--blue)';
+        dropZone.style.background = 'var(--sky-soft)';
+      });
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.style.borderColor = '';
+        dropZone.style.background = '';
+      });
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = '';
+        dropZone.style.background = '';
+        if (e.dataTransfer.files[0]) loadImage(e.dataTransfer.files[0]);
+      });
+
+      // ─── Flood Fill ──────────────────────────────
+      function hexToRgb(hex) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return [r, g, b];
+      }
+
+      function rgbToHsv(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, v = max;
+        const d = max - min;
+        s = max === 0 ? 0 : d / max;
+        if (max === min) h = 0;
+        else {
+          if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+          else if (max === g) h = ((b - r) / d + 2) / 6;
+          else h = ((r - g) / d + 4) / 6;
+        }
+        return [h, s, v];
+      }
+
+      function hsvToRgb(h, s, v) {
+        let r, g, b;
+        const i = Math.floor(h * 6);
+        const f = h * 6 - i;
+        const p = v * (1 - s);
+        const q = v * (1 - f * s);
+        const t = v * (1 - (1 - f) * s);
+        switch (i % 6) {
+          case 0: r = v; g = t; b = p; break;
+          case 1: r = q; g = v; b = p; break;
+          case 2: r = p; g = v; b = t; break;
+          case 3: r = p; g = q; b = v; break;
+          case 4: r = t; g = p; b = v; break;
+          case 5: r = v; g = p; b = q; break;
+        }
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+      }
+
+      function colorDistance(r1, g1, b1, r2, g2, b2) {
+        return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2) / Math.sqrt(3 * 255 * 255);
+      }
+
+      function floodFill(startX, startY, fillHex, tolerance) {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        const w = imageData.width;
+        const h = imageData.height;
+        const idx = (startY * w + startX) * 4;
+
+        const startR = data[idx], startG = data[idx + 1], startB = data[idx + 2];
+        const [fillR, fillG, fillB] = hexToRgb(fillHex);
+        const [fh, fs, fv] = rgbToHsv(fillR, fillG, fillB);
+
+        // Si el color de inicio ya se parece al de relleno, no hacer nada
+        if (colorDistance(startR, startG, startB, fillR, fillG, fillB) < tolerance / 100) return [];
+
+        const tol = tolerance / 100;
+        const stack = [[startX, startY]];
+        const visited = new Uint8Array(w * h);
+        const changed = [];
+
+        while (stack.length > 0) {
+          const [x, y] = stack.pop();
+          const pi = y * w + x;
+          if (visited[pi]) continue;
+          visited[pi] = 1;
+
+          const pi4 = pi * 4;
+          const pr = data[pi4], pg = data[pi4 + 1], pb = data[pi4 + 2];
+
+          if (colorDistance(pr, pg, pb, startR, startG, startB) > tol) continue;
+
+          // Preservar luminosidad original: reemplazar tono/saturación, mantener brillo
+          const [_, __, ov] = rgbToHsv(pr, pg, pb);
+          const [nr, ng, nb] = hsvToRgb(fh, fs, ov);
+          // Mezclar 75% nuevo + 25% original para preservar textura
+          data[pi4]     = Math.round(nr * 0.75 + pr * 0.25);
+          data[pi4 + 1] = Math.round(ng * 0.75 + pg * 0.25);
+          data[pi4 + 2] = Math.round(nb * 0.75 + pb * 0.25);
+          changed.push([x, y]);
+
+          if (x > 0)   stack.push([x - 1, y]);
+          if (x < w - 1) stack.push([x + 1, y]);
+          if (y > 0)   stack.push([x, y - 1]);
+          if (y < h - 1) stack.push([x, y + 1]);
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+        return changed;
+      }
+
+      // ─── Click en canvas ────────────────────────
+      canvas.addEventListener('click', (e) => {
+        if (!originalImageData) return;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mx = Math.round((e.clientX - rect.left) * scaleX);
+        const my = Math.round((e.clientY - rect.top) * scaleY);
+
+        if (mx < 0 || mx >= canvas.width || my < 0 || my >= canvas.height) return;
+
+        // Guardar estado anterior para deshacer
+        previousImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        const tol = parseInt(toleranceSlider.value);
+        const changed = floodFill(mx, my, selectedColor, tol);
+        if (changed.length > 0) {
+          btnUndo.disabled = false;
+          hint.classList.add('hidden');
+          setTimeout(() => hint.classList.remove('hidden'), 2000);
+        }
+      });
+
+      // ─── Paleta de colores ──────────────────────
+      palette.addEventListener('click', (e) => {
+        const swatch = e.target.closest('.color-swatch');
+        if (!swatch) return;
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+        swatch.classList.add('active');
+        selectedColor = swatch.dataset.color;
+        customColor.value = selectedColor;
+      });
+
+      customColor.addEventListener('input', () => {
+        selectedColor = customColor.value;
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      });
+
+      // ─── Tolerancia ─────────────────────────────
+      toleranceSlider.addEventListener('input', () => {
+        toleranceLabel.textContent = toleranceSlider.value + '%';
+      });
+
+      // ─── Deshacer ───────────────────────────────
+      btnUndo.addEventListener('click', () => {
+        if (!previousImageData) return;
+        ctx.putImageData(previousImageData, 0, 0);
+        btnUndo.disabled = true;
+      });
+
+      // ─── Reset ──────────────────────────────────
+      btnReset.addEventListener('click', () => {
+        if (!originalImageData) return;
+        ctx.putImageData(originalImageData, 0, 0);
+        previousImageData = null;
+        btnUndo.disabled = true;
+        hint.classList.remove('hidden');
+      });
+
+      // ─── Descargar ──────────────────────────────
+      btnDownload.addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.download = 'pared-proveesur.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+
+      // ─── Botón menú móvil ───────────────────────
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+        mobileMenu.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        });
+      }
+
+    });
+  </script>
+</body>
+</html>
