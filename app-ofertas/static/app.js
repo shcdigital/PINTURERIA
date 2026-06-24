@@ -251,7 +251,7 @@ async function loadConfig() {
   const r = await fetch('/api/config');
   const cfg = await r.json();
   document.getElementById('config-token').value = '';
-  document.getElementById('config-repo').value = cfg.repo || 'pablo/PINTURERIA';
+  document.getElementById('config-repo').value = cfg.repo || 'shcdigital/PINTURERIA';
   document.getElementById('config-status').innerHTML = cfg.has_token
     ? '<span style="color:var(--green)">✅ Token configurado</span>'
     : '<span style="color:var(--ink-soft)">⚠️ Todavía no configuraste el token</span>';

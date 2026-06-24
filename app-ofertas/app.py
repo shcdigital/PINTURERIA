@@ -1,16 +1,30 @@
-import os, json, re, threading, time, webbrowser
+import os, json, re, threading, time, webbrowser, sys, shutil
 from flask import Flask, request, jsonify, send_from_directory
 from config_manager import load as load_config, save as save_config
 from github_api import test_connection, get_file_contents, put_file_contents
 from card_generator import generate_card_html, insert_card_in_html, update_index_html
 
-app = Flask(__name__, static_folder='static')
+if getattr(sys, 'frozen', False):
+    BASE_DIR = os.path.dirname(sys.executable)
+    APP_DIR = sys._MEIPASS
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    APP_DIR = BASE_DIR
+
+app = Flask(__name__, static_folder=os.path.join(APP_DIR, 'static'))
 PORT = 3456
-DRAFTS_DIR = os.path.join(os.path.dirname(__file__), 'drafts')
+
+DRAFTS_DIR = os.path.join(BASE_DIR, 'drafts')
 
 os.makedirs(DRAFTS_DIR, exist_ok=True)
 
-# ─── Config ─────────────────────────────────────────────
+# Copy bundled drafts to persistent location on first run
+if APP_DIR != BASE_DIR and not os.listdir(DRAFTS_DIR):
+    bundled_drafts = os.path.join(APP_DIR, 'drafts')
+    if os.path.exists(bundled_drafts):
+        for fname in os.listdir(bundled_drafts):
+            if fname.endswith('.json'):
+                shutil.copy2(os.path.join(bundled_drafts, fname), os.path.join(DRAFTS_DIR, fname))
 
 @app.route('/api/config', methods=['GET', 'POST'])
 def api_config():
@@ -26,8 +40,6 @@ def api_test():
     data = request.json
     ok, code = test_connection(data['token'], data['repo'])
     return jsonify({'ok': ok, 'status': code})
-
-# ─── Borradores locales ────────────────────────────────
 
 @app.route('/api/ofertas', methods=['GET'])
 def api_list_ofertas():
@@ -66,8 +78,6 @@ def api_save_borrador():
         json.dump(data, f, ensure_ascii=False, indent=2)
     return jsonify({'ok': True, 'archivo': fname})
 
-# ─── Publicar en GitHub ─────────────────────────────────
-
 @app.route('/api/ofertas/publicar', methods=['POST'])
 def api_publicar():
     data = request.json
@@ -83,7 +93,6 @@ def api_publicar():
 
     card_html = generate_card_html(foto, nombre, desc, precio, descuento)
 
-    # Actualizar ofertas.html
     ofertas_html, sha_ofertas, err = get_file_contents(cfg['token'], cfg['repo'], 'ofertas.html')
     if err:
         return jsonify({'ok': False, 'error': f'No se pudo leer ofertas.html: {err}'}), 500
@@ -93,7 +102,6 @@ def api_publicar():
     if not ok:
         return jsonify({'ok': False, 'error': f'Error al actualizar ofertas.html: {err}'}), 500
 
-    # Actualizar index.html (solo las 3 primeras ofertas)
     index_html, sha_index, err = get_file_contents(cfg['token'], cfg['repo'], 'index.html')
     if not err:
         todas_cards = re.findall(r'<div class="offer-card reveal">.*?</div>', nuevo_ofertas, re.DOTALL)
@@ -102,7 +110,6 @@ def api_publicar():
             if nuevo_index != index_html:
                 put_file_contents(cfg['token'], cfg['repo'], 'index.html', nuevo_index, 'Actualizar ofertas destacadas')
 
-    # Borrar borrador si se publicó desde uno
     archivo = data.get('archivo_borrador')
     if archivo:
         path = os.path.join(DRAFTS_DIR, archivo)
@@ -110,8 +117,6 @@ def api_publicar():
             os.remove(path)
 
     return jsonify({'ok': True})
-
-# ─── Eliminar ────────────────────────────────────────────
 
 @app.route('/api/ofertas/eliminar', methods=['POST'])
 def api_eliminar():
@@ -123,8 +128,6 @@ def api_eliminar():
             os.remove(path)
     return jsonify({'ok': True})
 
-# ─── Frontend ────────────────────────────────────────────
-
 @app.route('/')
 def index():
     return send_from_directory('static', 'index.html')
@@ -135,6 +138,6 @@ def open_browser():
 
 if __name__ == '__main__':
     threading.Thread(target=open_browser, daemon=True).start()
-    print(f'🔧 Gestor de Ofertas Proveesur')
-    print(f'📋 Abrí http://localhost:{PORT} en tu navegador')
+    print(f'Gestor de Ofertas Proveesur')
+    print(f'Abrí http://localhost:{PORT} en tu navegador')
     app.run(host='127.0.0.1', port=PORT, debug=False)

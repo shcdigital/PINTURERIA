@@ -4,7 +4,7 @@ API = 'https://api.github.com'
 
 def headers(token):
     return {
-        'Authorization': f'token {token}',
+        'Authorization': f'Bearer {token}',
         'Accept': 'application/vnd.github.v3+json',
     }
 
