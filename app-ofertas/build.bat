@@ -53,33 +53,28 @@ pyinstaller --onefile --windowed --name "GestorOfertas" ^
   --add-data="static;static" ^
   --add-data="drafts;drafts" ^
   --hidden-import=webview ^
-  --hidden-import=webview.platforms.winforms_edge ^
   --hidden-import=clr ^
-  --collect-all=webview ^
-  --collect-all=pythonnet ^
   --distpath dist ^
   --workpath build ^
   --clean app.py
 
-if %errorlevel% equ 0 (
+if exist dist\GestorOfertas.exe (
     echo.
     echo ============================================
     echo  LISTO!
-    echo  Ejecutable: %~dp0dist\GestorOfertas.exe
+    echo  Ejecutable: dist\GestorOfertas.exe
     echo.
     echo  Ahora podes:
     echo  1. Hacer doble click en GestorOfertas.exe
-    echo  2. Se abre una ventana nativa (o el navegador si fallo)
-    echo  3. Anda a ? Configuracion (arriba a la derecha)
+    echo  2. Se abre una ventana nativa (sin Chrome)
+    echo  3. Anda a Configuracion (arriba a la derecha)
     echo  4. Pega el token, repo: shcdigital/PINTURERIA
     echo  5. Guarda y proba conexion
     echo ============================================
 ) else (
     echo.
-    echo ERROR: No se pudo compilar.
+    echo ERROR: No se genero el .exe.
     echo Fijate el mensaje de arriba para ver que fallo.
-    echo.
-    echo Si dice "Access is denied": cerra GestorOfertas.exe si esta abierto.
 )
 
 pause
