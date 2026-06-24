@@ -32,21 +32,7 @@ if exist *.spec del /q *.spec
 
 REM Instalar dependencias
 echo Instalando dependencias...
-pip install "rembg[cpu]" Pillow --quiet
-
-REM Verificar que onnxruntime funciona
-python -c "import onnxruntime; print('onnxruntime OK - backend:', onnxruntime.get_device())"
-if %errorlevel% neq 0 (
-    echo.
-    echo ERROR: onnxruntime no se puede cargar.
-    echo Instalá el Visual C++ Redistributable desde:
-    echo https://aka.ms/vs/17/release/vc_redist.x64.exe
-    echo.
-    echo Después ejecutá build.bat de nuevo.
-    pause
-    exit /b 1
-)
-
+pip install Pillow --quiet
 echo.
 
 REM Compilar
@@ -55,8 +41,6 @@ pyinstaller --onefile --windowed --name "GestorOfertas" ^
   --add-data="static;static" ^
   --add-data="drafts;drafts" ^
   --add-data="installer\icon.ico;." ^
-  --hidden-import=rembg ^
-  --hidden-import=onnxruntime ^
   --hidden-import=PIL ^
   --distpath dist ^
   --workpath build ^

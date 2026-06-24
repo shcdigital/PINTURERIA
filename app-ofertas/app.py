@@ -28,44 +28,37 @@ PORT = 3456
 DRAFTS_DIR = os.path.join(BASE_DIR, 'drafts')
 os.makedirs(DRAFTS_DIR, exist_ok=True)
 
-# ─── Modelo rembg ─────────────────────────────────
+# ─── Quitar fondo con Pillow ───────────────────────
 
-U2NET_DIR = os.path.join(os.path.expanduser('~'), '.u2net')
-os.makedirs(U2NET_DIR, exist_ok=True)
-MODEL_DEST = os.path.join(U2NET_DIR, 'u2net.onnx')
-MODEL_URL = 'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx'
+def quitar_fondo_pillow(imagen):
+    """Remove background using color distance in HSV space. Works for clean backgrounds."""
+    img = imagen.convert('RGBA')
+    pixels = img.load()
+    w, h = img.size
 
-def descargar_modelo():
-    if os.path.exists(MODEL_DEST):
-        return True
-    log('Descargando modelo rembg (~176MB)...')
-    try:
-        urllib.request.urlretrieve(MODEL_URL, MODEL_DEST + '.tmp')
-        os.rename(MODEL_DEST + '.tmp', MODEL_DEST)
-        log('Modelo rembg descargado')
-        return True
-    except Exception as e:
-        log(f'Error descargando modelo: {e}')
-        if os.path.exists(MODEL_DEST + '.tmp'):
-            os.remove(MODEL_DEST + '.tmp')
-        return False
+    sample_colors = []
+    for x in range(0, w, max(1, w // 20)):
+        for y in range(0, h, max(1, h // 20)):
+            if x < 3 or y < 3 or x >= w - 3 or y >= h - 3:
+                c = pixels[x, y][:3]
+                sample_colors.append(c)
+    if not sample_colors:
+        return img
 
-rembg_session = None
-HAS_REMBG = False
+    bg_r = sum(c[0] for c in sample_colors) / len(sample_colors)
+    bg_g = sum(c[1] for c in sample_colors) / len(sample_colors)
+    bg_b = sum(c[2] for c in sample_colors) / len(sample_colors)
 
-def _init_rembg():
-    global rembg_session, HAS_REMBG
-    if not os.path.exists(MODEL_DEST):
-        return
-    try:
-        from rembg import remove as rembg_remove, new_session
-        rembg_session = new_session()
-        HAS_REMBG = True
-        log('Sesion rembg iniciada')
-    except Exception as e:
-        log(f'Error iniciando rembg: {e}')
+    threshold = 50
 
-_init_rembg()
+    for x in range(w):
+        for y in range(h):
+            r, g, b, a = pixels[x, y]
+            dist = ((r - bg_r) ** 2 + (g - bg_g) ** 2 + (b - bg_b) ** 2) ** 0.5
+            if dist < threshold:
+                pixels[x, y] = (r, g, b, 0)
+
+    return img
 
 # ─── Shutdown endpoint ────────────────────────────
 
@@ -266,15 +259,6 @@ def api_procesar_imagen():
     if not b64:
         return jsonify({'ok': False, 'error': 'Falta imagen'}), 400
 
-    global rembg_session, HAS_REMBG
-    if not HAS_REMBG and not os.path.exists(MODEL_DEST):
-        ok = descargar_modelo()
-        if ok:
-            _init_rembg()
-
-    if not HAS_REMBG:
-        return jsonify({'ok': False, 'error': 'rembg no disponible'}), 400
-
     try:
         header, encoded = b64.split(',', 1) if ',' in b64 else ('', b64)
         raw = base64.b64decode(encoded)
@@ -285,19 +269,14 @@ def api_procesar_imagen():
             ratio = MAX_IMG_W / w
             img = img.resize((MAX_IMG_W, int(h * ratio)), Image.LANCZOS)
 
-        if HAS_REMBG and rembg_session:
-            from rembg import remove as rembg_remove
-            buf = io.BytesIO()
-            img.save(buf, format='PNG')
-            out = rembg_remove(buf.getvalue(), session=rembg_session)
-            img = Image.open(io.BytesIO(out))
+        img = quitar_fondo_pillow(img)
 
         out_buf = io.BytesIO()
         img.save(out_buf, format='PNG')
         result = base64.b64encode(out_buf.getvalue()).decode('utf-8')
         result_b64 = 'data:image/png;base64,' + result
 
-        return jsonify({'ok': True, 'imagen': result_b64, 'usuario_rembg': HAS_REMBG})
+        return jsonify({'ok': True, 'imagen': result_b64})
     except Exception as e:
         log(f'Error procesando imagen: {e}')
         log(traceback.format_exc())
@@ -340,10 +319,7 @@ def api_shutdown():
 
 @app.route('/api/rembg/status', methods=['GET'])
 def api_rembg_status():
-    return jsonify({
-        'disponible': HAS_REMBG,
-        'modelo_descargado': os.path.exists(MODEL_DEST),
-    })
+    return jsonify({'disponible': True, 'metodo': 'pillow'})
 
 # ─── Diagnostic ─────────────────────────────────────
 
@@ -391,18 +367,11 @@ def _chrome_app(url):
 
 if __name__ == '__main__':
     if '--uninstall' in sys.argv:
-        if os.path.exists(MODEL_DEST):
-            os.remove(MODEL_DEST)
-            log('Modelo rembg eliminado por uninstall')
         sys.exit(0)
 
     threading.Thread(target=start_server, daemon=True).start()
     ready = _wait_flask()
     log(f'Flask ready={ready}')
-
-    if not os.path.exists(MODEL_DEST):
-        log('Iniciando descarga de modelo rembg en background...')
-        threading.Thread(target=descargar_modelo, daemon=True).start()
 
     url = f'http://localhost:{PORT}'
     log(f'Abriendo ventana app en {url}')
