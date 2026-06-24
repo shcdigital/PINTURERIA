@@ -346,7 +346,7 @@ async function publicarOferta(archivoBorrador) {
   }
 
   btn.disabled = false;
-  btn.innerHTML = '\ud83c\udf10 Publicar';
+  btn.innerHTML = '\U0001f310 Publicar';
 }
 
 async function eliminarBorrador(archivo) {
