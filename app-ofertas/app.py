@@ -1,5 +1,5 @@
 import os, json, re, threading, time, webbrowser, sys, shutil
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from config_manager import load as load_config, save as save_config
 from github_api import test_connection, get_file_contents, put_file_contents
 from card_generator import generate_card_html, insert_card_in_html, update_index_html
@@ -11,14 +11,12 @@ else:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     APP_DIR = BASE_DIR
 
-app = Flask(__name__, static_folder=os.path.join(APP_DIR, 'static'))
+app = Flask(__name__)
 PORT = 3456
 
 DRAFTS_DIR = os.path.join(BASE_DIR, 'drafts')
-
 os.makedirs(DRAFTS_DIR, exist_ok=True)
 
-# Copy bundled drafts to persistent location on first run
 if APP_DIR != BASE_DIR and not os.listdir(DRAFTS_DIR):
     bundled_drafts = os.path.join(APP_DIR, 'drafts')
     if os.path.exists(bundled_drafts):
@@ -26,11 +24,34 @@ if APP_DIR != BASE_DIR and not os.listdir(DRAFTS_DIR):
             if fname.endswith('.json'):
                 shutil.copy2(os.path.join(bundled_drafts, fname), os.path.join(DRAFTS_DIR, fname))
 
+# ─── Embeber CSS + JS en el HTML ────────────────────
+def _read(path):
+    with open(path, encoding='utf-8') as f:
+        return f.read()
+
+try:
+    css = _read(os.path.join(APP_DIR, 'static', 'styles.css'))
+    js = _read(os.path.join(APP_DIR, 'static', 'app.js'))
+    html_raw = _read(os.path.join(APP_DIR, 'static', 'index.html'))
+except FileNotFoundError:
+    css = _read(os.path.join(BASE_DIR, 'static', 'styles.css'))
+    js = _read(os.path.join(BASE_DIR, 'static', 'app.js'))
+    html_raw = _read(os.path.join(BASE_DIR, 'static', 'index.html'))
+
+# Quitar referencias externas e inyectar CSS/JS inline
+html = html_raw \
+    .replace('<link rel="stylesheet" href="/static/styles.css" />', '') \
+    .replace('<script src="/static/app.js"></script>', '')
+html = html.replace('</head>', f'<style>{css}</style></head>')
+html = html.replace('</body>', f'<script>{js}</script></body>')
+
+# ─── API ────────────────────────────────────────────
+
 @app.route('/api/config', methods=['GET', 'POST'])
 def api_config():
     if request.method == 'GET':
         c = load_config()
-        return jsonify({'token': c['token'][:8] + '••••' if c['token'] else '', 'repo': c['repo'], 'has_token': bool(c['token'])})
+        return jsonify({'token': c['token'][:8] + '\u2022\u2022\u2022\u2022' if c['token'] else '', 'repo': c['repo'], 'has_token': bool(c['token'])})
     data = request.json
     save_config({'token': data['token'], 'repo': data['repo']})
     return jsonify({'ok': True})
@@ -47,7 +68,7 @@ def api_list_ofertas():
     if os.path.exists(DRAFTS_DIR):
         for fname in sorted(os.listdir(DRAFTS_DIR), reverse=True):
             if fname.endswith('.json'):
-                with open(os.path.join(DRAFTS_DIR, fname), 'r') as f:
+                with open(os.path.join(DRAFTS_DIR, fname)) as f:
                     draft = json.load(f)
                     draft['tipo'] = 'borrador'
                     draft['archivo'] = fname
@@ -56,9 +77,9 @@ def api_list_ofertas():
     publicadas = []
     cfg = load_config()
     if cfg['token'] and cfg['repo']:
-        html, _, _ = get_file_contents(cfg['token'], cfg['repo'], 'ofertas.html')
-        if html:
-            cards = re.findall(r'<div class="offer-card reveal">(.*?)</div>', html, re.DOTALL)
+        content, _, _ = get_file_contents(cfg['token'], cfg['repo'], 'ofertas.html')
+        if content:
+            cards = re.findall(r'<div class="offer-card reveal">(.*?)</div>', content, re.DOTALL)
             for card in cards:
                 nombre = re.search(r'<h3>(.*?)</h3>', card)
                 precio = re.search(r'class="offer-price">\$(.*?)</span>', card)
@@ -83,7 +104,7 @@ def api_publicar():
     data = request.json
     cfg = load_config()
     if not cfg['token'] or not cfg['repo']:
-        return jsonify({'ok': False, 'error': 'Configurá el token y repo primero'}), 400
+        return jsonify({'ok': False, 'error': 'Configur\u00e1 el token y repo primero'}), 400
 
     foto = data.get('foto', '')
     nombre = data.get('nombre', 'Producto')
@@ -130,7 +151,7 @@ def api_eliminar():
 
 @app.route('/')
 def index():
-    return send_from_directory('static', 'index.html')
+    return html
 
 def open_browser():
     time.sleep(1)
@@ -139,5 +160,5 @@ def open_browser():
 if __name__ == '__main__':
     threading.Thread(target=open_browser, daemon=True).start()
     print(f'Gestor de Ofertas Proveesur')
-    print(f'Abrí http://localhost:{PORT} en tu navegador')
+    print(f'Abr\u00ed http://localhost:{PORT} en tu navegador')
     app.run(host='127.0.0.1', port=PORT, debug=False)
