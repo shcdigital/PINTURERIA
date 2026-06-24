@@ -1,11 +1,7 @@
 import json, os, sys
 
 if getattr(sys, 'frozen', False):
-    _exe_dir = os.path.dirname(sys.executable)
-    if os.access(_exe_dir, os.W_OK):
-        DATA_DIR = _exe_dir
-    else:
-        DATA_DIR = os.path.join(os.environ.get('APPDATA', os.path.expanduser('~')), 'GestorOfertasProveesur')
+    DATA_DIR = os.path.join(os.environ.get('APPDATA', os.path.expanduser('~')), 'GestorOfertasProveesur')
 else:
     DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 
