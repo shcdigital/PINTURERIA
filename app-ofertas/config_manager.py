@@ -1,12 +1,18 @@
 import json, os, sys
 
 if getattr(sys, 'frozen', False):
-    BASE_DIR = os.path.dirname(sys.executable)
+    _exe_dir = os.path.dirname(sys.executable)
+    if os.access(_exe_dir, os.W_OK):
+        DATA_DIR = _exe_dir
+    else:
+        DATA_DIR = os.path.join(os.environ.get('APPDATA', os.path.expanduser('~')), 'GestorOfertasProveesur')
 else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 
-CONFIG_PATH = os.path.join(BASE_DIR, 'config.json')
-PUBLICADAS_PATH = os.path.join(BASE_DIR, 'publicadas.json')
+os.makedirs(DATA_DIR, exist_ok=True)
+
+CONFIG_PATH = os.path.join(DATA_DIR, 'config.json')
+PUBLICADAS_PATH = os.path.join(DATA_DIR, 'publicadas.json')
 
 def load():
     if not os.path.exists(CONFIG_PATH):

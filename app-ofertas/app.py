@@ -1,10 +1,18 @@
 import os, json, re, threading, time, webbrowser, sys, traceback, urllib.request, subprocess, io, base64
 from PIL import Image
 
-LOG = os.path.join(
-    os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__)),
-    'app.log'
-)
+if getattr(sys, 'frozen', False):
+    _exe_dir = os.path.dirname(sys.executable)
+    if os.access(_exe_dir, os.W_OK):
+        DATA_DIR = _exe_dir
+    else:
+        DATA_DIR = os.path.join(os.environ.get('APPDATA', os.path.expanduser('~')), 'GestorOfertasProveesur')
+else:
+    DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+
+os.makedirs(DATA_DIR, exist_ok=True)
+
+LOG = os.path.join(DATA_DIR, 'app.log')
 
 def log(msg):
     with open(LOG, 'a', encoding='utf-8') as f:
@@ -17,15 +25,10 @@ from config_manager import load as load_config, save as save_config, load_publis
 from github_api import test_connection, get_file_contents, put_file_contents, delete_file, list_files_in_dir
 from card_generator import generate_card_html, insert_card_in_html, update_index_html, remove_card_by_id, inject_expiry_script, extract_card_by_id
 
-if getattr(sys, 'frozen', False):
-    BASE_DIR = os.path.dirname(sys.executable)
-else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 app = Flask(__name__, static_folder=None)
 PORT = 3456
 
-DRAFTS_DIR = os.path.join(BASE_DIR, 'drafts')
+DRAFTS_DIR = os.path.join(DATA_DIR, 'drafts')
 os.makedirs(DRAFTS_DIR, exist_ok=True)
 
 # ─── Quitar fondo con Pillow ───────────────────────
@@ -62,7 +65,7 @@ def quitar_fondo_pillow(imagen):
 
 # ─── Shutdown endpoint ────────────────────────────
 
-SHUTDOWN_FILE = os.path.join(BASE_DIR, '.cerrar')
+SHUTDOWN_FILE = os.path.join(DATA_DIR, '.cerrar')
 if os.path.exists(SHUTDOWN_FILE):
     os.remove(SHUTDOWN_FILE)
 
@@ -70,7 +73,7 @@ def _read_static(name):
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
         base = os.path.join(sys._MEIPASS, 'static')
     else:
-        base = os.path.join(BASE_DIR, 'static')
+        base = os.path.join(DATA_DIR, 'static')
     path = os.path.join(base, name)
     if os.path.exists(path):
         with open(path, 'r', encoding='utf-8') as f:
