@@ -32,7 +32,7 @@ if exist *.spec del /q *.spec
 
 REM Instalar dependencias
 echo Instalando dependencias...
-pip install rembg onnxruntime Pillow --quiet
+pip install "rembg[cpu]" Pillow --quiet
 echo.
 
 REM Compilar
@@ -44,6 +44,8 @@ pyinstaller --onefile --windowed --name "GestorOfertas" ^
   --hidden-import=rembg ^
   --hidden-import=onnxruntime ^
   --hidden-import=PIL ^
+  --collect-all=rembg ^
+  --collect-all=onnxruntime ^
   --distpath dist ^
   --workpath build ^
   --clean app.py

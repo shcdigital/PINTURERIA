@@ -52,7 +52,11 @@ def descargar_modelo():
 
 rembg_session = None
 HAS_REMBG = False
-if os.path.exists(MODEL_DEST):
+
+def _init_rembg():
+    global rembg_session, HAS_REMBG
+    if not os.path.exists(MODEL_DEST):
+        return
     try:
         from rembg import remove as rembg_remove, new_session
         rembg_session = new_session()
@@ -60,6 +64,8 @@ if os.path.exists(MODEL_DEST):
         log('Sesion rembg iniciada')
     except Exception as e:
         log(f'Error iniciando rembg: {e}')
+
+_init_rembg()
 
 # ─── Shutdown endpoint ────────────────────────────
 
@@ -264,12 +270,10 @@ def api_procesar_imagen():
     if not HAS_REMBG and not os.path.exists(MODEL_DEST):
         ok = descargar_modelo()
         if ok:
-            try:
-                from rembg import remove as rembg_remove, new_session
-                rembg_session = new_session()
-                HAS_REMBG = True
-            except Exception as e:
-                pass
+            _init_rembg()
+
+    if not HAS_REMBG:
+        return jsonify({'ok': False, 'error': 'rembg no disponible'}), 400
 
     try:
         header, encoded = b64.split(',', 1) if ',' in b64 else ('', b64)
@@ -282,6 +286,7 @@ def api_procesar_imagen():
             img = img.resize((MAX_IMG_W, int(h * ratio)), Image.LANCZOS)
 
         if HAS_REMBG and rembg_session:
+            from rembg import remove as rembg_remove
             buf = io.BytesIO()
             img.save(buf, format='PNG')
             out = rembg_remove(buf.getvalue(), session=rembg_session)
