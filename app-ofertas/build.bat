@@ -5,13 +5,6 @@ echo  Compilando Gestor de Ofertas Proveesur...
 echo ============================================
 echo.
 
-REM Verificar que las carpetas existen
-if not exist static (
-    echo ERROR: Falta la carpeta static/
-    pause
-    exit /b 1
-)
-
 if exist drafts\*.json (
     echo OK: drafts/ contiene archivos JSON
 ) else (
@@ -39,7 +32,6 @@ if exist *.spec del /q *.spec
 REM Compilar
 echo.
 pyinstaller --onefile --windowed --name "GestorOfertas" ^
-  --add-data="static;static" ^
   --add-data="drafts;drafts" ^
   --distpath dist ^
   --workpath build ^
