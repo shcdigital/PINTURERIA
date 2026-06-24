@@ -85,7 +85,7 @@ Genera `dist/GestorOfertas_Installer.exe` (auto-descarga Inno Setup si falta).
 - **✨ Quitar fondo**: elimina el fondo de la foto con Pillow (umbral ajustable con slider de intensidad)
 - **↩ Deshacer**: restaura la foto original antes del último procesamiento
 - **💾 Guardar borrador**: guarda localmente en `%APPDATA%\GestorOfertasProveesur\drafts\`
-- **🌐 Publicar**: sube la oferta al repositorio GitHub, actualiza `ofertas.html` e `index.html`
+- **🌐 Publicar**: sube la oferta al repositorio GitHub, se inserta al inicio de la grilla. Máximo 30 ofertas simultáneas (10 filas de 3); al llegar a 30, la más antigua se elimina con backup automático en `.bak/`
 - **✕ Eliminar**: elimina del sitio, guarda backup en `.bak/` (últimos 10)
 - **Badge de vencimiento**: las ofertas vencidas muestran "⚠️ OFERTA TERMINADA"
 - **Dashboard**: muestra borradores y ofertas publicadas con su estado
