@@ -201,7 +201,10 @@ function renderDashboard() {
 
 function nuevaOferta() {
   document.getElementById('form-title').textContent = 'Nueva oferta';
-  document.getElementById('offer-form').reset();
+  document.getElementById('offer-name').value = '';
+  document.getElementById('offer-desc').value = '';
+  document.getElementById('offer-price').value = '';
+  document.getElementById('offer-discount').value = '20';
   fotoBase64 = null;
   document.getElementById('preview-foto').src = '';
   document.getElementById('preview-foto').classList.add('hidden');
