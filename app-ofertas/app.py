@@ -695,6 +695,18 @@ def api_eliminar():
             os.remove(path)
     return jsonify({'ok': True})
 
+@app.route('/check')
+def check():
+    has_css_ref = 'styles.css' in HTML
+    has_js_ref = 'app.js' in HTML
+    css_len = len(CSS)
+    js_len = len(JS)
+    return jsonify({'version': '2026-06-24-embed', 'has_css_ref': has_css_ref, 'has_js_ref': has_js_ref, 'css_len': css_len, 'js_len': js_len})
+
+@app.route('/debug')
+def debug():
+    return '<pre>' + HTML.replace('&', '&amp;').replace('<', '&lt;') + '</pre>'
+
 @app.route('/')
 def index():
     return HTML
