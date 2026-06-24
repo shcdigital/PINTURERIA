@@ -58,11 +58,11 @@ pyinstaller --onefile --windowed --name "GestorOfertas" ^
   --workpath build ^
   --clean app.py
 
-if exist dist\GestorOfertas.exe (
+if exist "%~dp0dist\GestorOfertas.exe" (
     echo.
     echo ============================================
     echo  LISTO!
-    echo  Ejecutable: dist\GestorOfertas.exe
+    echo  Ejecutable: %~dp0dist\GestorOfertas.exe
     echo.
     echo  Ahora podes:
     echo  1. Hacer doble click en GestorOfertas.exe
