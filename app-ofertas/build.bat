@@ -1,5 +1,6 @@
 @echo off
 chcp 65001 >nul
+pushd "%~dp0"
 echo ============================================
 echo  Compilando Gestor de Ofertas Proveesur...
 echo ============================================
@@ -49,7 +50,7 @@ if %errorlevel% neq 0 (
 
 REM Compilar
 echo.
-pyinstaller --onefile --windowed --name "GestorOfertas" ^
+pyinstaller --onefile --name "GestorOfertas" ^
   --add-data="static;static" ^
   --add-data="drafts;drafts" ^
   --hidden-import=webview ^
@@ -58,11 +59,11 @@ pyinstaller --onefile --windowed --name "GestorOfertas" ^
   --workpath build ^
   --clean app.py
 
-if exist "%~dp0dist\GestorOfertas.exe" (
+if exist dist\GestorOfertas.exe (
     echo.
     echo ============================================
     echo  LISTO!
-    echo  Ejecutable: %~dp0dist\GestorOfertas.exe
+    echo  Ejecutable: dist\GestorOfertas.exe
     echo.
     echo  Ahora podes:
     echo  1. Hacer doble click en GestorOfertas.exe

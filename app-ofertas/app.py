@@ -1,10 +1,23 @@
-import os, json, re, threading, time, webbrowser, sys
+import os, json, re, threading, time, webbrowser, sys, traceback
+
+LOG = os.path.join(
+    os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__)),
+    'app.log'
+)
+
+def log(msg):
+    with open(LOG, 'a', encoding='utf-8') as f:
+        f.write(f'{time.strftime("%H:%M:%S")} {msg}\n')
+
+log('=== App iniciada ===')
 
 try:
     import webview
     HAS_WEBVIEW = True
+    log('webview importado OK')
 except ImportError:
     HAS_WEBVIEW = False
+    log('webview NO disponible')
 
 from flask import Flask, request, jsonify
 from config_manager import load as load_config, save as save_config, load_published, save_published, add_published, remove_published
@@ -227,13 +240,24 @@ if __name__ == '__main__':
     time.sleep(1.5)
 
     if HAS_WEBVIEW:
-        webview.create_window(
-            'Gestor de Ofertas · Proveesur',
-            f'http://localhost:{PORT}',
-            width=1100, height=750,
-            resizable=True,
-        )
+        log('Intentando abrir ventana nativa...')
+        try:
+            webview.create_window(
+                'Gestor de Ofertas · Proveesur',
+                f'http://localhost:{PORT}',
+                width=1100, height=750,
+                resizable=True,
+            )
+            log('Ventana cerrada normalmente')
+        except Exception as e:
+            log(f'ERROR en webview: {e}')
+            log(traceback.format_exc())
+            webbrowser.open(f'http://localhost:{PORT}')
+            log('Fallback a navegador')
+            while True:
+                time.sleep(1)
     else:
+        log('Abriendo navegador (sin pywebview)')
         webbrowser.open(f'http://localhost:{PORT}')
         while True:
             time.sleep(1)
