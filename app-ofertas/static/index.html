@@ -26,6 +26,7 @@
       <button class="btn btn-secondary btn-sm" data-view="dashboard">📋 Dashboard</button>
       <button class="btn btn-primary btn-sm" data-view="nueva">+ Nueva</button>
       <button class="btn btn-secondary btn-sm" data-view="config">⚙️</button>
+      <button id="btn-cerrar" class="btn btn-danger btn-sm">✕ Cerrar</button>
     </nav>
   </header>
 
@@ -66,6 +67,10 @@
           <p style="margin:0.25rem 0 0;color:var(--ink-soft)">JPG o PNG</p>
           <input type="file" id="foto-input" accept="image/*" style="display:none" />
           <img id="preview-foto" class="hidden" style="max-height:180px;border-radius:0.75rem;margin-top:0.5rem" alt="Preview" />
+        </div>
+        <div style="margin-top:0.5rem;display:flex;gap:0.5rem;align-items:center">
+          <button id="btn-quitar-fondo" class="btn btn-secondary btn-sm" disabled>✨ Quitar fondo</button>
+          <span id="fondo-status" class="small" style="color:var(--ink-soft)"></span>
         </div>
 
         <div style="margin-top:1rem">

@@ -75,6 +75,11 @@ function renderDashboard() {
   document.getElementById('published-count').textContent = ofertasData.publicadas.length;
 }
 
+async function cerrarApp() {
+  if (!confirm('¿Cerrar la aplicación?')) return;
+  await fetch('/api/shutdown', { method: 'POST' });
+}
+
 function nuevaOferta() {
   document.getElementById('form-title').textContent = 'Nueva oferta';
   document.getElementById('offer-name').value = '';
@@ -89,6 +94,8 @@ function nuevaOferta() {
   document.getElementById('preview-foto-card').style.display = 'none';
   document.getElementById('preview-placeholder').style.display = 'flex';
   document.getElementById('archivo-borrador').value = '';
+  document.getElementById('btn-quitar-fondo').disabled = true;
+  document.getElementById('fondo-status').textContent = '';
   actualizarPreview();
   showView('view-form');
 }
@@ -143,9 +150,39 @@ function procesarFoto(file) {
     document.getElementById('preview-foto-card').src = fotoBase64;
     document.getElementById('preview-foto-card').style.display = 'block';
     document.getElementById('preview-placeholder').style.display = 'none';
+    document.getElementById('btn-quitar-fondo').disabled = false;
+    document.getElementById('fondo-status').textContent = '';
     actualizarPreview();
   };
   reader.readAsDataURL(file);
+}
+
+async function quitarFondo() {
+  if (!fotoBase64) return;
+  const btn = document.getElementById('btn-quitar-fondo');
+  const status = document.getElementById('fondo-status');
+  btn.disabled = true;
+  status.textContent = 'Procesando...';
+  try {
+    const r = await fetch('/api/imagen/procesar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imagen: fotoBase64 }),
+    });
+    const res = await r.json();
+    if (res.ok) {
+      fotoBase64 = res.imagen;
+      document.getElementById('preview-foto').src = fotoBase64;
+      document.getElementById('preview-foto-card').src = fotoBase64;
+      actualizarPreview();
+      status.textContent = 'Fondo quitado ✅';
+    } else {
+      status.textContent = 'Error: ' + (res.error || 'desconocido');
+    }
+  } catch {
+    status.textContent = 'Error de conexión';
+  }
+  btn.disabled = false;
 }
 
 function actualizarPreview() {
@@ -349,6 +386,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-publicar').addEventListener('click', () => publicarOferta(null));
   document.getElementById('btn-test').addEventListener('click', testConnection);
   document.getElementById('btn-save-config').addEventListener('click', saveConfig);
+  document.getElementById('btn-quitar-fondo').addEventListener('click', quitarFondo);
+  document.getElementById('btn-cerrar').addEventListener('click', cerrarApp);
 
   loadDashboard();
 });

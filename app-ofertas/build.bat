@@ -30,16 +30,26 @@ REM Limpiar builds anteriores
 if exist build rmdir /s /q build
 if exist *.spec del /q *.spec
 
+REM Instalar dependencias
+echo Instalando dependencias...
+pip install rembg onnxruntime Pillow --quiet
+echo.
+
 REM Compilar
 echo.
 pyinstaller --onefile --windowed --name "GestorOfertas" ^
   --add-data="static;static" ^
   --add-data="drafts;drafts" ^
+  --add-data="installer\icon.ico;." ^
+  --hidden-import=rembg ^
+  --hidden-import=onnxruntime ^
+  --hidden-import=PIL ^
   --distpath dist ^
   --workpath build ^
   --clean app.py
 
 if exist dist\GestorOfertas.exe (
+    copy installer\icon.ico dist\ /y >nul
     echo.
     echo ============================================
     echo  LISTO!
@@ -48,9 +58,11 @@ if exist dist\GestorOfertas.exe (
     echo  Ahora podes:
     echo  1. Hacer doble click en GestorOfertas.exe
     echo  2. Se abre Chrome modo app (sin interfaz de navegador)
-    echo  3. Anda a Configuracion (arriba a la derecha)
+    echo  3. Anda a Configuracion ^(arriba a la derecha^)
     echo  4. Pega el token, repo: shcdigital/PINTURERIA
     echo  5. Guarda y proba conexion
+    echo.
+    echo  Para crear el instalador: package.bat (en carpeta installer/)
     echo ============================================
 ) else (
     echo.

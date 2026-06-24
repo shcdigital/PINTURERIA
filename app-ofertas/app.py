@@ -1,4 +1,5 @@
-import os, json, re, threading, time, webbrowser, sys, traceback, urllib.request, subprocess
+import os, json, re, threading, time, webbrowser, sys, traceback, urllib.request, subprocess, io, base64
+from PIL import Image
 
 LOG = os.path.join(
     os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__)),
@@ -26,6 +27,45 @@ PORT = 3456
 
 DRAFTS_DIR = os.path.join(BASE_DIR, 'drafts')
 os.makedirs(DRAFTS_DIR, exist_ok=True)
+
+# ─── Modelo rembg ─────────────────────────────────
+
+U2NET_DIR = os.path.join(os.path.expanduser('~'), '.u2net')
+os.makedirs(U2NET_DIR, exist_ok=True)
+MODEL_DEST = os.path.join(U2NET_DIR, 'u2net.onnx')
+MODEL_URL = 'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx'
+
+def descargar_modelo():
+    if os.path.exists(MODEL_DEST):
+        return True
+    log('Descargando modelo rembg (~176MB)...')
+    try:
+        urllib.request.urlretrieve(MODEL_URL, MODEL_DEST + '.tmp')
+        os.rename(MODEL_DEST + '.tmp', MODEL_DEST)
+        log('Modelo rembg descargado')
+        return True
+    except Exception as e:
+        log(f'Error descargando modelo: {e}')
+        if os.path.exists(MODEL_DEST + '.tmp'):
+            os.remove(MODEL_DEST + '.tmp')
+        return False
+
+rembg_session = None
+HAS_REMBG = False
+if os.path.exists(MODEL_DEST):
+    try:
+        from rembg import remove as rembg_remove, new_session
+        rembg_session = new_session()
+        HAS_REMBG = True
+        log('Sesion rembg iniciada')
+    except Exception as e:
+        log(f'Error iniciando rembg: {e}')
+
+# ─── Shutdown endpoint ────────────────────────────
+
+SHUTDOWN_FILE = os.path.join(BASE_DIR, '.cerrar')
+if os.path.exists(SHUTDOWN_FILE):
+    os.remove(SHUTDOWN_FILE)
 
 def _read_static(name):
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
@@ -208,6 +248,100 @@ def api_eliminar():
             os.remove(path)
     return jsonify({'ok': True})
 
+# ─── Imagen ─────────────────────────────────────────
+
+MAX_IMG_W = 800
+IMG_QUALITY = 85
+
+@app.route('/api/imagen/procesar', methods=['POST'])
+def api_procesar_imagen():
+    data = request.json
+    b64 = data.get('imagen', '')
+    if not b64:
+        return jsonify({'ok': False, 'error': 'Falta imagen'}), 400
+
+    global rembg_session, HAS_REMBG
+    if not HAS_REMBG and not os.path.exists(MODEL_DEST):
+        ok = descargar_modelo()
+        if ok:
+            try:
+                from rembg import remove as rembg_remove, new_session
+                rembg_session = new_session()
+                HAS_REMBG = True
+            except Exception as e:
+                pass
+
+    try:
+        header, encoded = b64.split(',', 1) if ',' in b64 else ('', b64)
+        raw = base64.b64decode(encoded)
+
+        img = Image.open(io.BytesIO(raw))
+        w, h = img.size
+        if w > MAX_IMG_W:
+            ratio = MAX_IMG_W / w
+            img = img.resize((MAX_IMG_W, int(h * ratio)), Image.LANCZOS)
+
+        if HAS_REMBG and rembg_session:
+            buf = io.BytesIO()
+            img.save(buf, format='PNG')
+            out = rembg_remove(buf.getvalue(), session=rembg_session)
+            img = Image.open(io.BytesIO(out))
+
+        out_buf = io.BytesIO()
+        img.save(out_buf, format='PNG')
+        result = base64.b64encode(out_buf.getvalue()).decode('utf-8')
+        result_b64 = 'data:image/png;base64,' + result
+
+        return jsonify({'ok': True, 'imagen': result_b64, 'usuario_rembg': HAS_REMBG})
+    except Exception as e:
+        log(f'Error procesando imagen: {e}')
+        log(traceback.format_exc())
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+@app.route('/api/imagen/solo_optimizar', methods=['POST'])
+def api_optimizar_imagen():
+    data = request.json
+    b64 = data.get('imagen', '')
+    if not b64:
+        return jsonify({'ok': False, 'error': 'Falta imagen'}), 400
+
+    try:
+        header, encoded = b64.split(',', 1) if ',' in b64 else ('', b64)
+        raw = base64.b64decode(encoded)
+
+        img = Image.open(io.BytesIO(raw))
+        w, h = img.size
+        if w > MAX_IMG_W:
+            ratio = MAX_IMG_W / w
+            img = img.resize((MAX_IMG_W, int(h * ratio)), Image.LANCZOS)
+
+        out_buf = io.BytesIO()
+        img.save(out_buf, format='JPEG', quality=IMG_QUALITY)
+        result = base64.b64encode(out_buf.getvalue()).decode('utf-8')
+        result_b64 = 'data:image/jpeg;base64,' + result
+
+        return jsonify({'ok': True, 'imagen': result_b64})
+    except Exception as e:
+        log(f'Error optimizando: {e}')
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+# ─── Shutdown ───────────────────────────────────────
+
+@app.route('/api/shutdown', methods=['POST'])
+def api_shutdown():
+    with open(SHUTDOWN_FILE, 'w') as f:
+        f.write('cerrar')
+    return jsonify({'ok': True})
+
+@app.route('/api/rembg/status', methods=['GET'])
+def api_rembg_status():
+    return jsonify({
+        'disponible': HAS_REMBG,
+        'modelo_descargado': os.path.exists(MODEL_DEST),
+    })
+
+# ─── Diagnostic ─────────────────────────────────────
+
 @app.route('/check')
 def check():
     has_css_ref = 'styles.css' in HTML
@@ -251,9 +385,19 @@ def _chrome_app(url):
     return False
 
 if __name__ == '__main__':
+    if '--uninstall' in sys.argv:
+        if os.path.exists(MODEL_DEST):
+            os.remove(MODEL_DEST)
+            log('Modelo rembg eliminado por uninstall')
+        sys.exit(0)
+
     threading.Thread(target=start_server, daemon=True).start()
     ready = _wait_flask()
     log(f'Flask ready={ready}')
+
+    if not os.path.exists(MODEL_DEST):
+        log('Iniciando descarga de modelo rembg en background...')
+        threading.Thread(target=descargar_modelo, daemon=True).start()
 
     url = f'http://localhost:{PORT}'
     log(f'Abriendo ventana app en {url}')
@@ -269,4 +413,7 @@ if __name__ == '__main__':
         webbrowser.open(url)
 
     while True:
+        if os.path.exists(SHUTDOWN_FILE):
+            log('Shutdown solicitado')
+            break
         time.sleep(1)

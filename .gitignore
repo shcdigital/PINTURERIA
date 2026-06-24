@@ -5,3 +5,4 @@ config.json
 app-ofertas/dist/
 app-ofertas/build/
 app-ofertas/*.spec
+*.onnx
