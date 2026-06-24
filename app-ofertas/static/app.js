@@ -1,7 +1,6 @@
 let ofertasData = { borradores: [], publicadas: [] };
 let fotoBase64 = null;
 
-// ─── Toast ──────────────────────────────────────────
 function showToast(text, type = 'success') {
   const t = document.getElementById('toast');
   const txt = document.getElementById('toast-text');
@@ -12,13 +11,11 @@ function showToast(text, type = 'success') {
   t._timer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// ─── Navegación SPA ────────────────────────────────
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
 
-// ─── Dashboard ─────────────────────────────────────
 async function loadDashboard() {
   showView('view-dashboard');
   try {
@@ -43,7 +40,7 @@ function renderDashboard() {
           <strong>${d.nombre || 'Sin nombre'}</strong>
           <div><span class="badge badge-draft">Borrador</span></div>
         </div>
-        <div class="flex" style="display:flex;gap:0.5rem">
+        <div style="display:flex;gap:0.5rem">
           <button class="btn btn-secondary btn-sm" onclick="editarBorrador('${d.archivo}')">Editar</button>
           <button class="btn btn-green btn-sm" onclick="publicarOferta('${d.archivo}')">Publicar</button>
           <button class="btn btn-danger btn-sm" onclick="eliminarBorrador('${d.archivo}')">✕</button>
@@ -55,25 +52,36 @@ function renderDashboard() {
   if (ofertasData.publicadas.length === 0) {
     pubList.innerHTML = '<div class="empty-state">Todavía no publicaste ofertas.</div>';
   } else {
-    pubList.innerHTML = ofertasData.publicadas.map(p => `
-      <div class="offer-list-item">
-        <div>
-          <strong>${p.nombre}</strong>
-          <div><span class="badge badge-published">Publicada · $${p.precio_oferta}</span></div>
+    pubList.innerHTML = ofertasData.publicadas.map(p => {
+      const venc = p.vencimiento;
+      const vencida = venc && new Date(venc) < new Date();
+      const badgeClass = vencida ? 'badge-expired' : 'badge-published';
+      const badgeText = vencida ? 'Terminada · ' + venc : (venc ? 'Vence ' + venc : 'Publicada');
+      return `
+        <div class="offer-list-item">
+          <div>
+            <strong>${p.nombre}</strong>
+            <div><span class="badge ${badgeClass}">${badgeText}</span></div>
+          </div>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn btn-outline btn-sm" onclick="eliminarPublicada('${p.id}')">✕ Eliminar</button>
+          </div>
         </div>
-        <a href="ofertas.html" target="_blank" class="btn btn-secondary btn-sm">Ver online</a>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   document.getElementById('draft-count').textContent = ofertasData.borradores.length;
   document.getElementById('published-count').textContent = ofertasData.publicadas.length;
 }
 
-// ─── Nueva Oferta ──────────────────────────────────
 function nuevaOferta() {
   document.getElementById('form-title').textContent = 'Nueva oferta';
-  document.getElementById('offer-form').reset();
+  document.getElementById('offer-name').value = '';
+  document.getElementById('offer-desc').value = '';
+  document.getElementById('offer-price').value = '';
+  document.getElementById('offer-discount').value = '20';
+  document.getElementById('offer-vencimiento').value = '';
   fotoBase64 = null;
   document.getElementById('preview-foto').src = '';
   document.getElementById('preview-foto').classList.add('hidden');
@@ -93,6 +101,7 @@ function editarBorrador(archivo) {
   document.getElementById('offer-desc').value = d.descripcion || '';
   document.getElementById('offer-price').value = d.precio_original || '';
   document.getElementById('offer-discount').value = d.descuento || '20';
+  document.getElementById('offer-vencimiento').value = d.vencimiento || '';
   document.getElementById('archivo-borrador').value = archivo;
   fotoBase64 = d.foto || null;
   if (fotoBase64) {
@@ -106,7 +115,6 @@ function editarBorrador(archivo) {
   showView('view-form');
 }
 
-// ─── Drag & Drop ───────────────────────────────────
 function setupDropzone() {
   const dz = document.getElementById('dropzone');
   const input = document.getElementById('foto-input');
@@ -140,7 +148,6 @@ function procesarFoto(file) {
   reader.readAsDataURL(file);
 }
 
-// ─── Preview en vivo ───────────────────────────────
 function actualizarPreview() {
   const nombre = document.getElementById('offer-name').value || 'Nombre del producto';
   const desc = document.getElementById('offer-desc').value || 'Descripción breve del producto.';
@@ -166,7 +173,6 @@ function actualizarPreview() {
   }
 }
 
-// ─── Guardar borrador ──────────────────────────────
 async function guardarBorrador() {
   const data = getFormData();
   if (!data.nombre) return showToast('Completá el nombre del producto.', 'error');
@@ -184,7 +190,6 @@ async function guardarBorrador() {
   }
 }
 
-// ─── Publicar ──────────────────────────────────────
 async function publicarOferta(archivoBorrador) {
   const confirmar = confirm('¿Publicar esta oferta en GitHub? Aparecerá en la web en ~1-2 minutos.');
   if (!confirmar) return;
@@ -236,6 +241,29 @@ async function eliminarBorrador(archivo) {
   loadDashboard();
 }
 
+async function eliminarPublicada(cardId) {
+  if (!confirm('¿Eliminar esta oferta de la web? Se hará backup automático.')) return;
+
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  const r = await fetch('/api/ofertas/eliminar_publicada', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: cardId }),
+  });
+  const res = await r.json();
+  if (res.ok) {
+    showToast('✅ Oferta eliminada de la web. Backup guardado.');
+    loadDashboard();
+  } else {
+    showToast('Error: ' + (res.error || 'desconocido'), 'error');
+    btn.disabled = false;
+    btn.textContent = '✕ Eliminar';
+  }
+}
+
 function getFormData() {
   return {
     foto: fotoBase64 || '',
@@ -243,10 +271,10 @@ function getFormData() {
     descripcion: document.getElementById('offer-desc').value.trim(),
     precio_original: document.getElementById('offer-price').value || '0',
     descuento: document.getElementById('offer-discount').value || '20',
+    vencimiento: document.getElementById('offer-vencimiento').value || '',
   };
 }
 
-// ─── Configuración ─────────────────────────────────
 async function loadConfig() {
   const r = await fetch('/api/config');
   const cfg = await r.json();
@@ -299,7 +327,6 @@ async function saveConfig() {
   loadConfig();
 }
 
-// ─── Init ──────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   setupDropzone();
 

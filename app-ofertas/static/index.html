@@ -11,14 +11,12 @@
 </head>
 <body>
 
-  <!-- ═══ Toast ═══ -->
   <div id="toast" class="toast">
-    <div class="flex" style="display:flex;align-items:center;gap:0.75rem">
-      <span id="toast-text" class="font-medium" style="font-weight:500">Mensaje</span>
+    <div style="display:flex;align-items:center;gap:0.75rem">
+      <span id="toast-text" style="font-weight:500">Mensaje</span>
     </div>
   </div>
 
-  <!-- ═══ Header ═══ -->
   <header class="app-header">
     <div class="logo-text">
       <span class="l1">G</span><span class="l2">e</span><span class="l3">s</span><span class="l4">t</span><span style="color:var(--ink)">or</span>
@@ -31,11 +29,8 @@
     </nav>
   </header>
 
-  <!-- ═══════════════════════════════════════════════════ -->
-  <!-- VIEW: DASHBOARD                                    -->
-  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- DASHBOARD -->
   <div id="view-dashboard" class="view container">
-
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
       <div class="card" style="text-align:center">
         <div style="font-size:2rem;font-weight:800;color:var(--yellow)"><span id="draft-count">0</span></div>
@@ -46,36 +41,22 @@
         <div style="color:var(--ink-soft)">Publicadas en web</div>
       </div>
     </div>
-
     <div class="card" style="margin-bottom:1rem">
       <div class="section-title">📝 Borradores</div>
-      <div id="draft-list">
-        <div class="empty-state">Cargando...</div>
-      </div>
+      <div id="draft-list"><div class="empty-state">Cargando...</div></div>
     </div>
-
     <div class="card">
       <div class="section-title">🌐 Publicadas en la web</div>
-      <div id="published-list">
-        <div class="empty-state">Cargando...</div>
-      </div>
+      <div id="published-list"><div class="empty-state">Cargando...</div></div>
     </div>
-
-    <div style="text-align:center;margin-top:1.5rem;color:var(--ink-soft)">
-      Los cambios en GitHub Pages pueden tardar hasta 2 minutos en verse online.
-    </div>
+    <div style="text-align:center;margin-top:1.5rem;color:var(--ink-soft)">Los cambios en GitHub Pages pueden tardar hasta 2 minutos en verse online.</div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════ -->
-  <!-- VIEW: FORMULARIO                                   -->
-  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- FORMULARIO -->
   <div id="view-form" class="view container hidden">
-
     <button class="btn btn-secondary btn-sm" data-view="dashboard" style="margin-bottom:1rem">← Volver</button>
     <h1 id="form-title" class="section-title">Nueva oferta</h1>
-
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
-      <!-- Formulario -->
       <div class="card">
         <input type="hidden" id="archivo-borrador" value="" />
 
@@ -116,6 +97,11 @@
           </div>
         </div>
 
+        <div style="margin-top:0.75rem">
+          <label class="form-label" for="offer-vencimiento">Fecha de vencimiento de la oferta <span style="color:var(--ink-soft);font-weight:400">(opcional)</span></label>
+          <input type="date" id="offer-vencimiento" class="form-field" />
+        </div>
+
         <div class="cta-bar">
           <button id="btn-guardar" class="btn btn-secondary">💾 Guardar borrador</button>
           <button id="btn-publicar" class="btn btn-green">🌐 Publicar</button>
@@ -126,15 +112,12 @@
         </p>
       </div>
 
-      <!-- Preview -->
       <div>
         <div class="form-label">Vista previa</div>
         <div class="offer-card-preview">
           <div class="offer-badge" id="preview-badge">-20%</div>
           <img id="preview-foto-card" src="" alt="Preview" style="display:none" />
-          <div style="background:var(--cream-deep);height:200px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft)" id="preview-placeholder">
-            Subí una foto para ver la preview
-          </div>
+          <div style="background:var(--cream-deep);height:200px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft)" id="preview-placeholder">Subí una foto para ver la preview</div>
           <div class="card-body">
             <h3 id="preview-nombre">Nombre del producto</h3>
             <p id="preview-desc">Descripción breve del producto.</p>
@@ -143,9 +126,7 @@
               <span class="offer-price" id="preview-offer-price">$8,000</span>
             </div>
             <div style="margin-top:0.75rem">
-              <span class="btn btn-primary btn-sm">
-                💬 Consultar
-              </span>
+              <span class="btn btn-primary btn-sm">💬 Consultar</span>
             </div>
           </div>
         </div>
@@ -153,19 +134,12 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════ -->
-  <!-- VIEW: CONFIGURACIÓN                                -->
-  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- CONFIGURACIÓN -->
   <div id="view-config" class="view container hidden">
     <button class="btn btn-secondary btn-sm" data-view="dashboard" style="margin-bottom:1rem">← Volver</button>
     <h1 class="section-title">⚙️ Configuración</h1>
-
     <div class="card" style="max-width:600px">
-      <p style="color:var(--ink-soft);margin-bottom:1rem">
-        Para que la app pueda publicar ofertas necesitás un <strong>token de GitHub</strong>
-        con acceso al repositorio.
-      </p>
-
+      <p style="color:var(--ink-soft);margin-bottom:1rem">Para que la app pueda publicar ofertas necesitás un <strong>token de GitHub</strong> con acceso al repositorio.</p>
       <details style="margin-bottom:1rem;color:var(--ink-soft)">
         <summary style="cursor:pointer;font-weight:600">📖 ¿Cómo generar el token?</summary>
         <ol style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.8">
@@ -178,19 +152,15 @@
           <li>Pegalo abajo y guardá</li>
         </ol>
       </details>
-
       <div style="margin-bottom:0.75rem">
         <label class="form-label" for="config-token">Token de GitHub</label>
         <input type="password" id="config-token" class="form-field" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
       </div>
-
       <div style="margin-bottom:1rem">
         <label class="form-label" for="config-repo">Repositorio</label>
         <input type="text" id="config-repo" class="form-field" placeholder="pablo/PINTURERIA" />
       </div>
-
       <div id="config-status" style="margin-bottom:1rem">⏳ Cargando...</div>
-
       <div style="display:flex;gap:0.75rem">
         <button id="btn-test" class="btn btn-secondary">Probar conexión</button>
         <button id="btn-save-config" class="btn btn-primary">Guardar configuración</button>

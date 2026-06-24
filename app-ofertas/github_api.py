@@ -34,3 +34,23 @@ def put_file_contents(token, repo, path, content, message):
     if r.ok:
         return True, None
     return False, f'Error {r.status_code}: {r.json().get("message", "")}'
+
+def delete_file(token, repo, path, message):
+    """Delete a file from the repo."""
+    content, sha, err = get_file_contents(token, repo, path)
+    if err:
+        return False, err
+    r = requests.delete(f'{API}/repos/{repo}/contents/{path}', json={
+        'message': message,
+        'sha': sha,
+    }, headers=headers(token))
+    if r.ok:
+        return True, None
+    return False, f'Error {r.status_code}: {r.json().get("message", "")}'
+
+def list_files_in_dir(token, repo, dir_path):
+    """List files in a directory in the repo."""
+    r = requests.get(f'{API}/repos/{repo}/contents/{dir_path}', headers=headers(token))
+    if not r.ok:
+        return None, f'Error {r.status_code}: {r.json().get("message", "")}'
+    return r.json(), None
