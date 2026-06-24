@@ -40,6 +40,93 @@ def insert_card_in_html(html, card_html):
         return html
     return html[:last] + card_html + '\n\n      ' + html[last:]
 
+MAX_CARDS = 30
+
+def insert_card_in_grid_top(html, card_html):
+    """Insert a card at the top of the offer grid, right after <div class=\"offer-grid\">"""
+    marker = '<div class="offer-grid">'
+    start = html.find(marker)
+    if start == -1:
+        return html
+    tag_end = html.find('>', start)
+    return html[:tag_end+1] + '\n' + card_html + html[tag_end+1:]
+
+def extract_offer_cards(html):
+    """Return list of (full_html_string, data_id) for each offer-card div."""
+    cards = []
+    search_from = 0
+    while True:
+        tag_start = html.find('<div class="offer-card', search_from)
+        if tag_start == -1:
+            break
+        comment_start = html.rfind('<!--', 0, tag_start)
+        if comment_start != -1:
+            comment_end = html.find('-->', comment_start)
+            if comment_end != -1:
+                between = html[comment_end+3:tag_start].strip()
+                if between == '':
+                    tag_start = comment_start
+        depth = 0
+        i = tag_start
+        in_comment = False
+        while i < len(html):
+            if in_comment:
+                cc = html.find('-->', i)
+                if cc == -1:
+                    i = len(html)
+                else:
+                    i = cc + 3
+                    in_comment = False
+                continue
+            if html[i:i+4] == '<!--':
+                in_comment = True
+                i += 4
+                continue
+            if html[i:i+5] == '</div':
+                depth -= 1
+                if depth == 0:
+                    close_tag = html.find('>', i)
+                    end = close_tag + 1
+                    card_html = html[tag_start:end]
+                    id_m = re.search(r'data-id="(of_\d+)"', card_html)
+                    cid = id_m.group(1) if id_m else ''
+                    cards.append((card_html, cid))
+                    search_from = end
+                    break
+                i += 5
+                continue
+            if html[i:i+4] == '<div' and (i+4 >= len(html) or html[i+4] in ' \t\n\r>'):
+                depth += 1
+                i += 4
+                continue
+            i += 1
+        else:
+            break
+    return cards
+
+def enforce_max_cards(html, max_cards=MAX_CARDS):
+    """Keep only first max_cards, return (trimmed_html, removed_ids)."""
+    cards = extract_offer_cards(html)
+    if len(cards) <= max_cards:
+        return html, []
+    kept = cards[:max_cards]
+    removed = cards[max_cards:]
+    removed_ids = [c[1] for c in removed if c[1]]
+    kept_str = '\n'.join(c[0] for c in kept)
+    grid_open = html.find('<div class="offer-grid">')
+    if grid_open == -1:
+        return html, []
+    tag_end = html.find('>', grid_open)
+    text_marker = '<div class="text-center'
+    text_pos = html.find(text_marker, grid_open)
+    if text_pos == -1:
+        return html, []
+    grid_close = html.rfind('</div>', grid_open, text_pos)
+    if grid_close == -1:
+        return html, []
+    trimmed = html[:tag_end+1] + '\n' + kept_str + '\n' + html[grid_close:]
+    return trimmed, removed_ids
+
 def remove_card_by_id(html, card_id):
     """Remove an offer-card div with the given data-id."""
     start_marker = f'<div class="offer-card reveal" data-id="{card_id}"'

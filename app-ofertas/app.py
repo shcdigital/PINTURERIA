@@ -1,4 +1,4 @@
-import os, json, re, threading, time, webbrowser, sys, traceback, urllib.request, subprocess, io, base64
+import os, json, threading, time, webbrowser, sys, traceback, urllib.request, subprocess, io, base64
 from PIL import Image
 
 if getattr(sys, 'frozen', False):
@@ -21,7 +21,7 @@ log('=== App iniciada ===')
 from flask import Flask, request, jsonify
 from config_manager import load as load_config, save as save_config, load_published, save_published, add_published, remove_published
 from github_api import test_connection, get_file_contents, put_file_contents, delete_file, list_files_in_dir
-from card_generator import generate_card_html, insert_card_in_html, update_index_html, remove_card_by_id, inject_expiry_script, extract_card_by_id
+from card_generator import generate_card_html, insert_card_in_grid_top, update_index_html, remove_card_by_id, inject_expiry_script, extract_card_by_id, extract_offer_cards, enforce_max_cards, MAX_CARDS
 
 app = Flask(__name__, static_folder=None)
 PORT = 3456
@@ -150,8 +150,19 @@ def api_publicar():
     if err:
         return jsonify({'ok': False, 'error': f'No se pudo leer ofertas.html: {err}'}), 500
 
-    nuevo_ofertas = insert_card_in_html(ofertas_html, card_html)
+    nuevo_ofertas = insert_card_in_grid_top(ofertas_html, card_html)
     nuevo_ofertas = inject_expiry_script(nuevo_ofertas)
+
+    # Trim to max 30 cards, backup extras
+    trimmed, removed_ids = enforce_max_cards(nuevo_ofertas, MAX_CARDS)
+    if removed_ids:
+        for rid in removed_ids:
+            card_content = extract_card_by_id(ofertas_html, rid)
+            if card_content:
+                bak_path = f'.bak/{rid}.bak.html'
+                put_file_contents(cfg['token'], cfg['repo'], bak_path, f'<!-- Backup of {rid} -->\n' + card_content, f'Backup removed offer {rid}')
+            remove_published(rid)
+        nuevo_ofertas = trimmed
 
     ok, err = put_file_contents(cfg['token'], cfg['repo'], 'ofertas.html', nuevo_ofertas, f'Agregar oferta: {nombre}')
     if not ok:
@@ -159,7 +170,8 @@ def api_publicar():
 
     index_html, sha_index, err = get_file_contents(cfg['token'], cfg['repo'], 'index.html')
     if not err:
-        nuevas_cards = re.findall(r'<div class="offer-card reveal".*?</div>', nuevo_ofertas, re.DOTALL)
+        cards = extract_offer_cards(nuevo_ofertas)
+        nuevas_cards = [c[0] for c in cards]
         if nuevas_cards:
             nuevo_index = update_index_html(index_html, nuevas_cards, max_cards=3)
             if nuevo_index != index_html:
@@ -227,8 +239,8 @@ def api_eliminar_publicada():
 
     index_html, sha_index, err = get_file_contents(cfg['token'], cfg['repo'], 'index.html')
     if not err:
-        cards_en_index = re.findall(r'<div class="offer-card reveal".*?</div>', index_html, re.DOTALL)
-        card_ids_in_index = re.findall(r'data-id="(of_\d+)"', index_html)
+        index_cards = extract_offer_cards(index_html)
+        card_ids_in_index = [c[1] for c in index_cards]
         if card_id in card_ids_in_index:
             nuevo_index, _ = remove_card_by_id(index_html, card_id)
             if nuevo_index != index_html:
