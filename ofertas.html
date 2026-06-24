@@ -290,6 +290,24 @@
           </div>
         </div>
 
+              <!-- Barniz 1 litro -->
+        <div class="offer-card reveal" data-id="of_1782336287857" data-vencimiento="2026-06-23">
+          <div class="offer-badge">-25%</div>
+          <img src="" alt="Barniz 1 litro" class="offer-card-img" loading="lazy" />
+          <div class="offer-card-body">
+            <h3>Barniz 1 litro</h3>
+            <p>Oferta barniz x 1 litro!</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="old-price">$19,522</span>
+              <span class="offer-price">$14,641</span>
+            </div>
+            <a href="https://wa.me/5491155553333?text=%C2%A1Hola%21%20Quiero%20la%20oferta%20de%20Barniz%201%20litro%20a%20%2414%2C641" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whatsapp-link">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Consultar
+            </a>
+          </div>
+        </div>
+
       <div class="text-center mt-12 reveal">
         <p class="text-sm text-[color:var(--ink-soft)] mb-4">¿No encontrás lo que buscás? Pedinos presupuesto personalizado.</p>
         <a href="/#contacto" class="btn-primary inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold">
@@ -375,5 +393,21 @@
 
   <!-- Script principal -->
   <script defer src="app.js"></script>
+
+<style>
+.offer-card.expirada { position: relative; }
+.offer-card.expirada .offer-card-img { opacity: 0.5; }
+.expirada-badge {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: #E63946; color: white; padding: 0.5rem 1.5rem;
+  border-radius: 999px; font-weight: 800; font-size: 1.1rem;
+  z-index: 10; white-space: nowrap; box-shadow: 0 4px 15px rgba(230,57,70,0.5);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); } 50% { transform: translate(-50%,-50%) scale(1.05); } }
+</style>
+<script>
+(function(){var d=document.querySelectorAll('[data-vencimiento]');d.forEach(function(e){var v=e.getAttribute('data-vencimiento');if(v&&new Date(v)<new Date()){e.classList.add('expirada');var b=document.createElement('div');b.className='expirada-badge';b.textContent='\u26a0 OFERTA TERMINADA';e.appendChild(b);var i=e.querySelector('img');if(i)i.style.opacity='0.5'}})})()
+</script>
 </body>
 </html>
