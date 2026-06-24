@@ -2,7 +2,7 @@
 chcp 65001 >nul
 pushd "%~dp0"
 echo ============================================
-echo  Compilando Gestor de Ofertas Proveesur...
+echo  Compilando Gestor de Ofertas TIENDA_NOMBRE...
 echo ============================================
 echo.
 

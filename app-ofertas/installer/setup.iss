@@ -1,6 +1,6 @@
-; Script de Inno Setup para Gestor de Ofertas Proveesur
+; Script de Inno Setup para Gestor de Ofertas TIENDA_NOMBRE
 ; Desarrollado por SHC Digital
-#define MyAppName "Gestor de Ofertas Proveesur"
+#define MyAppName "Gestor de Ofertas TIENDA_NOMBRE"
 #define MyAppVersion "1.0"
 #define MyAppPublisher "SHC Digital"
 #define MyAppURL "https://shcdigital.github.io/PINTURERIA/"

@@ -1,4 +1,4 @@
-const CACHE = 'proveesur-v1';
+const CACHE = 'tienda_nombre-v1';
 const URLS = [
   '/',
   '/index.html',

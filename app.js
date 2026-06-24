@@ -2,11 +2,11 @@
    CONFIGURACIÓN CENTRALIZADA
    =========================================== */
 const CONFIG = {
-  businessName: 'Proveesur',
+  businessName: 'TIENDA_NOMBRE',
   slogan: 'Pinturería de barrio con alma',
   whatsapp: '5491155553333',
   phone: '(011) 0000-0000',
-  email: 'hola@proveesur.com',
+  email: 'hola@tienda_nombre.com',
   address: 'Av. Siempre Viva 1234, Barrio Sur',
   hours: 'Lun a Vie: 8:00 – 19:00 | Sáb: 8:30 – 13:30',
   mapQuery: 'Plaza+de+Mayo,+Buenos+Aires',

@@ -1,5 +1,6 @@
 let ofertasData = { borradores: [], publicadas: [] };
 let fotoBase64 = null;
+let fotoOriginalBase64 = null;
 
 function showToast(text, type = 'success') {
   const t = document.getElementById('toast');
@@ -88,6 +89,7 @@ function nuevaOferta() {
   document.getElementById('offer-discount').value = '20';
   document.getElementById('offer-vencimiento').value = '';
   fotoBase64 = null;
+  fotoOriginalBase64 = null;
   document.getElementById('preview-foto').src = '';
   document.getElementById('preview-foto').classList.add('hidden');
   document.getElementById('preview-foto-card').src = '';
@@ -95,7 +97,11 @@ function nuevaOferta() {
   document.getElementById('preview-placeholder').style.display = 'flex';
   document.getElementById('archivo-borrador').value = '';
   document.getElementById('btn-quitar-fondo').disabled = true;
+  document.getElementById('btn-undo-fondo').disabled = true;
+  document.getElementById('btn-undo-fondo').style.display = 'none';
   document.getElementById('fondo-status').textContent = '';
+  document.getElementById('fondo-threshold').value = 50;
+  document.getElementById('fondo-threshold-label').textContent = '50';
   actualizarPreview();
   showView('view-form');
 }
@@ -111,6 +117,7 @@ function editarBorrador(archivo) {
   document.getElementById('offer-vencimiento').value = d.vencimiento || '';
   document.getElementById('archivo-borrador').value = archivo;
   fotoBase64 = d.foto || null;
+  fotoOriginalBase64 = d.foto || null;
   if (fotoBase64) {
     document.getElementById('preview-foto').src = fotoBase64;
     document.getElementById('preview-foto').classList.remove('hidden');
@@ -118,6 +125,10 @@ function editarBorrador(archivo) {
     document.getElementById('preview-foto-card').style.display = 'block';
     document.getElementById('preview-placeholder').style.display = 'none';
   }
+  document.getElementById('btn-undo-fondo').disabled = true;
+  document.getElementById('btn-undo-fondo').style.display = 'none';
+  document.getElementById('fondo-threshold').value = 50;
+  document.getElementById('fondo-threshold-label').textContent = '50';
   actualizarPreview();
   showView('view-form');
 }
@@ -145,13 +156,18 @@ function procesarFoto(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
     fotoBase64 = e.target.result;
+    fotoOriginalBase64 = e.target.result;
     document.getElementById('preview-foto').src = fotoBase64;
     document.getElementById('preview-foto').classList.remove('hidden');
     document.getElementById('preview-foto-card').src = fotoBase64;
     document.getElementById('preview-foto-card').style.display = 'block';
     document.getElementById('preview-placeholder').style.display = 'none';
     document.getElementById('btn-quitar-fondo').disabled = false;
+    document.getElementById('btn-undo-fondo').disabled = true;
+    document.getElementById('btn-undo-fondo').style.display = 'none';
     document.getElementById('fondo-status').textContent = '';
+    document.getElementById('fondo-threshold').value = 50;
+    document.getElementById('fondo-threshold-label').textContent = '50';
     actualizarPreview();
   };
   reader.readAsDataURL(file);
@@ -163,11 +179,12 @@ async function quitarFondo() {
   const status = document.getElementById('fondo-status');
   btn.disabled = true;
   status.textContent = 'Procesando...';
+  const threshold = parseInt(document.getElementById('fondo-threshold').value) || 50;
   try {
     const r = await fetch('/api/imagen/procesar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ imagen: fotoBase64 }),
+      body: JSON.stringify({ imagen: fotoBase64, threshold }),
     });
     const res = await r.json();
     if (res.ok) {
@@ -176,6 +193,8 @@ async function quitarFondo() {
       document.getElementById('preview-foto-card').src = fotoBase64;
       actualizarPreview();
       status.textContent = 'Fondo quitado ✅';
+      document.getElementById('btn-undo-fondo').disabled = false;
+      document.getElementById('btn-undo-fondo').style.display = 'inline-flex';
     } else {
       status.textContent = 'Error: ' + (res.error || 'desconocido');
     }
@@ -183,6 +202,17 @@ async function quitarFondo() {
     status.textContent = 'Error de conexión';
   }
   btn.disabled = false;
+}
+
+function deshacerFondo() {
+  if (!fotoOriginalBase64) return;
+  fotoBase64 = fotoOriginalBase64;
+  document.getElementById('preview-foto').src = fotoBase64;
+  document.getElementById('preview-foto-card').src = fotoBase64;
+  document.getElementById('btn-undo-fondo').disabled = true;
+  document.getElementById('btn-undo-fondo').style.display = 'none';
+  document.getElementById('fondo-status').textContent = 'Original restaurado';
+  actualizarPreview();
 }
 
 function actualizarPreview() {
@@ -387,6 +417,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-test').addEventListener('click', testConnection);
   document.getElementById('btn-save-config').addEventListener('click', saveConfig);
   document.getElementById('btn-quitar-fondo').addEventListener('click', quitarFondo);
+  document.getElementById('btn-undo-fondo').addEventListener('click', deshacerFondo);
+  document.getElementById('fondo-threshold').addEventListener('input', (e) => {
+    document.getElementById('fondo-threshold-label').textContent = e.target.value;
+  });
   document.getElementById('btn-cerrar').addEventListener('click', cerrarApp);
 
   loadDashboard();

@@ -8,6 +8,8 @@ else:
 
 os.makedirs(DATA_DIR, exist_ok=True)
 
+TIENDA = "pintureria_cliente"
+
 LOG = os.path.join(DATA_DIR, 'app.log')
 
 def log(msg):
@@ -29,8 +31,8 @@ os.makedirs(DRAFTS_DIR, exist_ok=True)
 
 # ─── Quitar fondo con Pillow ───────────────────────
 
-def quitar_fondo_pillow(imagen):
-    """Remove background using color distance in HSV space. Works for clean backgrounds."""
+def quitar_fondo_pillow(imagen, threshold=50):
+    """Remove background using color distance. threshold (10-150): lower = gentler, higher = more aggressive."""
     img = imagen.convert('RGBA')
     pixels = img.load()
     w, h = img.size
@@ -47,8 +49,6 @@ def quitar_fondo_pillow(imagen):
     bg_r = sum(c[0] for c in sample_colors) / len(sample_colors)
     bg_g = sum(c[1] for c in sample_colors) / len(sample_colors)
     bg_b = sum(c[2] for c in sample_colors) / len(sample_colors)
-
-    threshold = 50
 
     for x in range(w):
         for y in range(h):
@@ -80,7 +80,7 @@ CSS = _read_static('styles.css')
 JS = _read_static('app.js')
 HTML_BODY = _read_static('index.html')
 
-HTML_HEAD = '<!DOCTYPE html>\n<html lang="es-AR">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Gestor de Ofertas &middot; Proveesur</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">\n<style>\n' + CSS + '\n</style>\n</head>\n<body>\n'
+HTML_HEAD = f'<!DOCTYPE html>\n<html lang="es-AR">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Gestor de Ofertas &middot; {TIENDA}</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">\n<style>\n' + CSS + '\n</style>\n</head>\n<body>\n'
 HTML_FOOT = '<script>\n' + JS + '\n</script>\n</body>\n</html>'
 HTML = HTML_HEAD + HTML_BODY + HTML_FOOT
 
@@ -258,6 +258,13 @@ def api_procesar_imagen():
     if not b64:
         return jsonify({'ok': False, 'error': 'Falta imagen'}), 400
 
+    threshold = data.get('threshold', 50)
+    try:
+        threshold = int(threshold)
+        threshold = max(10, min(150, threshold))
+    except (ValueError, TypeError):
+        threshold = 50
+
     try:
         header, encoded = b64.split(',', 1) if ',' in b64 else ('', b64)
         raw = base64.b64decode(encoded)
@@ -268,7 +275,7 @@ def api_procesar_imagen():
             ratio = MAX_IMG_W / w
             img = img.resize((MAX_IMG_W, int(h * ratio)), Image.LANCZOS)
 
-        img = quitar_fondo_pillow(img)
+        img = quitar_fondo_pillow(img, threshold=threshold)
 
         out_buf = io.BytesIO()
         img.save(out_buf, format='PNG')
