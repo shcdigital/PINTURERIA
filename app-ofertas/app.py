@@ -1,4 +1,4 @@
-import os, json, re, threading, time, webbrowser, sys, traceback
+import os, json, re, threading, time, webbrowser, sys, traceback, urllib.request
 
 LOG = os.path.join(
     os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__)),
@@ -233,15 +233,30 @@ def index():
     return HTML
 
 def start_server():
-    app.run(host='127.0.0.1', port=PORT, debug=False)
+    app.run(host='127.0.0.1', port=PORT, debug=False, use_reloader=False)
+
+def _wait_flask():
+    for _ in range(30):
+        try:
+            urllib.request.urlopen(f'http://127.0.0.1:{PORT}/')
+            return True
+        except Exception:
+            time.sleep(0.3)
+    return False
 
 if __name__ == '__main__':
     threading.Thread(target=start_server, daemon=True).start()
-    time.sleep(1.5)
+    ready = _wait_flask()
+    log(f'Flask ready={ready}')
 
     if HAS_WEBVIEW:
         log('Intentando abrir ventana nativa...')
         try:
+            if sys.platform == 'win32':
+                import ctypes
+                ctypes.windll.user32.ShowWindow(
+                    ctypes.windll.kernel32.GetConsoleWindow(), 0
+                )
             webview.create_window(
                 'Gestor de Ofertas · Proveesur',
                 f'http://localhost:{PORT}',

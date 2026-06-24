@@ -50,7 +50,7 @@ if %errorlevel% neq 0 (
 
 REM Compilar
 echo.
-pyinstaller --onefile --name "GestorOfertas" ^
+pyinstaller --onefile --windowed --name "GestorOfertas" ^
   --add-data="static;static" ^
   --add-data="drafts;drafts" ^
   --hidden-import=webview ^
