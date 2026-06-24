@@ -257,12 +257,14 @@ if __name__ == '__main__':
                 ctypes.windll.user32.ShowWindow(
                     ctypes.windll.kernel32.GetConsoleWindow(), 0
                 )
-            webview.create_window(
+            window = webview.create_window(
                 'Gestor de Ofertas · Proveesur',
                 f'http://localhost:{PORT}',
                 width=1100, height=750,
                 resizable=True,
             )
+            log('Ventana creada, iniciando loop...')
+            webview.start()
             log('Ventana cerrada normalmente')
         except Exception as e:
             log(f'ERROR en webview: {e}')
