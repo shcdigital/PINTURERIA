@@ -1,4 +1,4 @@
-import os, json, re, threading, time, webbrowser, sys, traceback, urllib.request
+import os, json, re, threading, time, webbrowser, sys, traceback, urllib.request, subprocess
 
 LOG = os.path.join(
     os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__)),
@@ -10,14 +10,6 @@ def log(msg):
         f.write(f'{time.strftime("%H:%M:%S")} {msg}\n')
 
 log('=== App iniciada ===')
-
-try:
-    import webview
-    HAS_WEBVIEW = True
-    log('webview importado OK')
-except ImportError:
-    HAS_WEBVIEW = False
-    log('webview NO disponible')
 
 from flask import Flask, request, jsonify
 from config_manager import load as load_config, save as save_config, load_published, save_published, add_published, remove_published
@@ -244,37 +236,37 @@ def _wait_flask():
             time.sleep(0.3)
     return False
 
+def _chrome_app(url):
+    candidates = [
+        r'C:\Program Files\Google\Chrome\Application\chrome.exe',
+        r'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
+        os.path.expandvars(r'%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe'),
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            log(f'Chrome encontrado en: {p}')
+            subprocess.Popen([p, f'--app={url}'], shell=False)
+            return True
+    log('Chrome no encontrado en rutas conocidas')
+    return False
+
 if __name__ == '__main__':
     threading.Thread(target=start_server, daemon=True).start()
     ready = _wait_flask()
     log(f'Flask ready={ready}')
 
-    if HAS_WEBVIEW:
-        log('Intentando abrir ventana nativa...')
-        try:
-            if sys.platform == 'win32':
-                import ctypes
-                ctypes.windll.user32.ShowWindow(
-                    ctypes.windll.kernel32.GetConsoleWindow(), 0
-                )
-            window = webview.create_window(
-                'Gestor de Ofertas · Proveesur',
-                f'http://localhost:{PORT}',
-                width=1100, height=750,
-                resizable=True,
-            )
-            log('Ventana creada, iniciando loop...')
-            webview.start()
-            log('Ventana cerrada normalmente')
-        except Exception as e:
-            log(f'ERROR en webview: {e}')
-            log(traceback.format_exc())
-            webbrowser.open(f'http://localhost:{PORT}')
-            log('Fallback a navegador')
-            while True:
-                time.sleep(1)
-    else:
-        log('Abriendo navegador (sin pywebview)')
-        webbrowser.open(f'http://localhost:{PORT}')
-        while True:
-            time.sleep(1)
+    url = f'http://localhost:{PORT}'
+    log(f'Abriendo ventana app en {url}')
+
+    if sys.platform == 'win32':
+        import ctypes
+        ctypes.windll.user32.ShowWindow(
+            ctypes.windll.kernel32.GetConsoleWindow(), 0
+        )
+
+    if not _chrome_app(url):
+        log('Usando navegador por defecto')
+        webbrowser.open(url)
+
+    while True:
+        time.sleep(1)

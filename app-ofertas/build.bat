@@ -30,31 +30,11 @@ REM Limpiar builds anteriores
 if exist build rmdir /s /q build
 if exist *.spec del /q *.spec
 
-REM Instalar dependencias
-echo Instalando pywebview...
-pip install pywebview
-if %errorlevel% neq 0 (
-    echo ERROR: No se pudo instalar pywebview.
-    echo Asegurate de tener pip actualizado: python -m pip install --upgrade pip
-    pause
-    exit /b 1
-)
-
-REM Verificar que se pueda importar
-python -c "import webview; print('pywebview OK')"
-if %errorlevel% neq 0 (
-    echo ERROR: pywebview instalado pero no se puede importar.
-    pause
-    exit /b 1
-)
-
 REM Compilar
 echo.
 pyinstaller --onefile --windowed --name "GestorOfertas" ^
   --add-data="static;static" ^
   --add-data="drafts;drafts" ^
-  --hidden-import=webview ^
-  --hidden-import=clr ^
   --distpath dist ^
   --workpath build ^
   --clean app.py
@@ -67,7 +47,7 @@ if exist dist\GestorOfertas.exe (
     echo.
     echo  Ahora podes:
     echo  1. Hacer doble click en GestorOfertas.exe
-    echo  2. Se abre una ventana nativa (sin Chrome)
+    echo  2. Se abre Chrome modo app (sin interfaz de navegador)
     echo  3. Anda a Configuracion (arriba a la derecha)
     echo  4. Pega el token, repo: shcdigital/PINTURERIA
     echo  5. Guarda y proba conexion
