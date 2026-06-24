@@ -2,7 +2,6 @@
 __pycache__/
 *.pyc
 config.json
-app-ofertas/drafts/
 app-ofertas/dist/
 app-ofertas/build/
 app-ofertas/*.spec
